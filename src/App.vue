@@ -1,28 +1,44 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<div id="app">
+		<router-view/>
+	</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import {mapActions, mapGetters} from "vuex";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+	name: 'App',
+	metaInfo() {
+		return {
+			title: this.serverInfo.serverName ? this.serverInfo.serverName : this.$t('app.title')
+		}
+	},
+	mounted() {
+		this.whoami();
+		this.$store.subscribeAction({
+			error: (action, state, error) => {
+				const err = {
+					message: error.message
+				};
+
+				this.$bvToast.toast(this.$t('app.error.message', {name: action.type, message: err.message}), {
+					title: this.$t('app.error.title'),
+					autoHideDelay: 5000,
+					toaster: 'b-toaster-top-center',
+					variant: 'danger'
+				});
+			}
+		})
+	},
+	computed: {
+		...mapGetters(['serverInfo'])
+	},
+	methods: {
+		...mapActions(['whoami'])
+	}
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
