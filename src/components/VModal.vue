@@ -1,5 +1,6 @@
 <template>
 	<b-modal
+			:id="id"
 			centered
 			:title="title"
 			v-on="$listeners"
@@ -17,6 +18,10 @@ export default {
 	name: "VModal",
 	props: {
 		title: {
+			type: String,
+			required: true
+		},
+		id: {
 			type: String,
 			required: true
 		}

@@ -2,7 +2,7 @@
 	<div>
 		<b-card-header class="d-flex justify-content-between align-items-center">
 			<div>{{ $t('hostSettings.title') }}</div>
-			<b-button v-if="isLoggedIn" class="ml-auto" :to="{name: 'editServerHostSettings'}">
+			<b-button v-if="isAdmin" class="ml-auto" :to="{name: 'editServerHostSettings'}">
 				<b-icon icon="pencil"/>
 				{{ $t('app.btn.edit') }}
 			</b-button>
@@ -76,7 +76,7 @@ import {formatFieldValue} from "@/store/utils";
 export default {
 	name: "HostSettingsCard",
 	computed: {
-		...mapGetters(['hostSettings', 'hostSettingsDefinition', 'isLoggedIn']),
+		...mapGetters(['hostSettings', 'hostSettingsDefinition', 'isAdmin']),
 		tabs() {
 			return this.hostSettingsDefinition.tabs.map(tab => ({
 				title: tab.title,

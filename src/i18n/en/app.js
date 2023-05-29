@@ -2,7 +2,8 @@ export default {
     title: 'V Rising Server Manager',
     values: {
         yes: 'Yes',
-        no: 'No'
+        no: 'No',
+        actions: 'Actions',
     },
     btn: {
         edit: 'Edit'
@@ -32,5 +33,10 @@ export default {
         home: '',
         logs: '',
         settings: ''
+    },
+    logs: {
+        apiLogs: 'API Logs',
+        vServerLogs: 'VRising Server Logs',
+        processLogs: 'Process Logs'
     }
 }

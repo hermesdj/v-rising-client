@@ -1,9 +1,10 @@
 <template>
 	<div id="layout">
+		<ServerAlerts/>
+		<PlayerModals/>
 		<VampireThroneBackground/>
 		<MainNavBar class="site-header"/>
 		<router-view class="main-content"/>
-		<ServerAlerts />
 	</div>
 </template>
 
@@ -11,10 +12,11 @@
 import MainNavBar from "@/components/nav/MainNavBar.vue";
 import VampireThroneBackground from "@/layouts/VampireThroneBackground.vue";
 import ServerAlerts from "@/components/server/ServerAlerts.vue";
+import PlayerModals from "@/components/players/PlayerModals.vue";
 
 export default {
 	name: "MainAppLayout",
-	components: {ServerAlerts, VampireThroneBackground, MainNavBar}
+	components: {PlayerModals, ServerAlerts, VampireThroneBackground, MainNavBar}
 }
 </script>
 

@@ -11,7 +11,7 @@
 							<b-nav-item to="/settings/game" exact exact-active-class="active">
 								{{ $t('gameSettings.title') }}
 							</b-nav-item>
-							<b-nav-item v-if="isLoggedIn" to="/settings/users" exact exact-active-class="active">
+							<b-nav-item v-if="isAdmin" to="/settings/users" exact exact-active-class="active">
 								{{ $t('users.title') }}
 							</b-nav-item>
 						</b-nav>
@@ -34,7 +34,7 @@ export default {
 		this.loadServerSettings().catch(err => console.error('Failed to load server settings', err));
 	},
 	computed: {
-		...mapGetters(['isLoggedIn'])
+		...mapGetters(['isAdmin'])
 	},
 	methods: {
 		...mapActions(['loadServerSettings'])

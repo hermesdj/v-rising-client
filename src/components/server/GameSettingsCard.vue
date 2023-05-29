@@ -2,7 +2,7 @@
 	<div>
 		<b-card-header class="d-flex justify-content-between align-items-center">
 			<div>{{ $t('gameSettings.title') }}</div>
-			<b-button v-if="isLoggedIn" class="ml-auto" :to="{name: 'editServerGameSettings'}">
+			<b-button v-if="isAdmin" class="ml-auto" :to="{name: 'editServerGameSettings'}">
 				<b-icon icon="pencil"/>
 				{{$t('app.btn.edit')}}
 			</b-button>
@@ -97,7 +97,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['gameSettings', 'gameSettingsDefinition', 'isLoggedIn']),
+		...mapGetters(['gameSettings', 'gameSettingsDefinition', 'isAdmin']),
 		tabs() {
 			return this.gameSettingsDefinition.tabs.map(tab => ({
 				title: tab.title,

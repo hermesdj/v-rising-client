@@ -2,6 +2,11 @@
 	<b-container>
 		<b-row>
 			<b-col>
+				<ServerToolbar/>
+			</b-col>
+		</b-row>
+		<b-row>
+			<b-col>
 				<ServerInfoCard/>
 			</b-col>
 			<b-col>
@@ -16,10 +21,11 @@
 import {mapActions, mapGetters} from "vuex";
 import ConnectedPlayersCard from "@/components/players/ConnectedPlayersCard.vue";
 import ServerInfoCard from "@/components/server/ServerInfoCard.vue";
+import ServerToolbar from "@/components/server/ServerToolbar.vue";
 
 export default {
 	name: "HomePage",
-	components: {ServerInfoCard, ConnectedPlayersCard},
+	components: {ServerToolbar, ServerInfoCard, ConnectedPlayersCard},
 	data() {
 		return {}
 	},

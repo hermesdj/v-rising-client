@@ -71,7 +71,7 @@ export const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.meta && to.meta.auth && !store.getters['isLoggedIn']) {
+    if (to.meta && to.meta.auth && !store.getters['isAdmin']) {
         next({name: 'home'});
     } else {
         next();

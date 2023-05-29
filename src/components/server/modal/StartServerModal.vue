@@ -4,6 +4,8 @@
 			:title="$t('server.dialogs.start.title')"
 			ok-variant="success"
 			@ok="startServer"
+			header-bg-variant="success"
+			header-text-variant="light"
 	>
 		<p>
 			{{ $t('server.dialogs.start.text') }}

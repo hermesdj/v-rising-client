@@ -3,9 +3,9 @@
 			id="schedule-restart-server-modal"
 			:title="$t('server.dialogs.scheduleRestart.title')"
 			@ok="scheduleRestart"
-			header-bg-variant="warning"
-			header-text-variant="dark"
-			ok-variant="warning"
+			header-bg-variant="success"
+			header-text-variant="light"
+			ok-variant="success"
 	>
 		<p>
 			{{ $t('server.dialogs.scheduleRestart.text') }}

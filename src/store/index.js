@@ -11,7 +11,10 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         user: {
-            username: null
+            id: null,
+            username: null,
+            isAdmin: false,
+            isPlayer: false
         },
         definitions: {
             gameSettingsDefinitions,
@@ -59,6 +62,9 @@ export const store = new Vuex.Store({
     mutations: {
         saveUser(state, payload) {
             state.user.username = payload.username;
+            state.user.id = payload.id;
+            state.user.isPlayer = payload.isPlayer;
+            state.user.isAdmin = payload.isAdmin;
         },
         saveServerLogLine(state, newLine) {
             state.server.logs.push(newLine);
@@ -96,28 +102,44 @@ export const store = new Vuex.Store({
             Vue.set(state.server, 'backups', backupList);
         },
         playerConnected(state, player) {
-            const index = state.server.players.findIndex(p => p.approvedUserIndex === player.approvedUserIndex);
-
-            if (index > -1) {
-                state.server.players.splice(index, 1, player);
-            } else {
-                state.server.players.push(player);
-            }
+            player.isConnected = true;
+            state.server.players = state.server.players.map(p => {
+                if (p.userIndex === player.userIndex) {
+                    return player;
+                } else {
+                    return p;
+                }
+            });
         },
-        playerDisconnected(state, id) {
-            const index = state.server.players.findIndex(p => p.approvedUserIndex === id);
-
-            if (index > -1) {
-                state.server.players.splice(index, 1);
-            }
+        playerDisconnected(state, player) {
+            player.isConnected = false;
+            state.server.players = state.server.players.map(p => {
+                if (p.userIndex === player.userIndex) {
+                    return player;
+                } else {
+                    return p;
+                }
+            })
+        },
+        savePlayer(state, player) {
+            state.server.players = state.server.players.map(p => {
+                if (p.userIndex === player.userIndex) {
+                    return player;
+                } else {
+                    return p;
+                }
+            })
         }
     },
     getters: {
         isLoggedIn(state) {
             return state.user && state.user.username !== null;
         },
+        isAdmin(state) {
+            return state.user && state.user.isAdmin;
+        },
         user(state) {
-            return state.user || {username: null};
+            return state.user || {username: null, steamID: null};
         },
         serverLogs(state) {
             return state.server.logs;
@@ -125,11 +147,33 @@ export const store = new Vuex.Store({
         players(state) {
             return state.server.players;
         },
+        connectedPlayers(state) {
+            return state.server.players.filter(p => p.isConnected);
+        },
+        playersBySteamId(state) {
+            return (steamID) => state.server.players.filter(p => p.steamID === steamID);
+        },
+        myPlayers(state, getters) {
+            return getters.playersBySteamId(getters.user.id);
+        },
+        playerByUserIndex(state) {
+            return (userIndex) => state.server.players.find(p => p.userIndex === userIndex);
+        },
         serverInfo(state) {
             return state.server.info;
         },
         scheduledOperation(state) {
             return state.server.info.scheduledOperation;
+        },
+        mappedOperationValues(state, getters) {
+            const {scheduledOperation} = getters;
+            const options = scheduledOperation && scheduledOperation.options ? scheduledOperation.options : {};
+            return {
+                ...scheduledOperation,
+                ...options,
+                username: scheduledOperation && scheduledOperation.user ? scheduledOperation.user.username : 'unknown',
+                remainingTimeMinutes: scheduledOperation ? scheduledOperation.remainingTime / 60000 : 0
+            }
         },
         operationError(state) {
             return state.server.operationError;
@@ -181,14 +225,6 @@ export const store = new Vuex.Store({
         }
     },
     actions: {
-        async login({commit}, {username, password}) {
-            const {data} = await http.post('/auth/login', {
-                username,
-                password
-            }, {withCredentials: true});
-            commit('saveUser', data);
-            this._vm.$socket.client.connect((err) => console.error('socket connect error', err));
-        },
         async logout({commit}) {
             const {data} = await http.post('/auth/logout', {}, {withCredentials: true});
             if (data.success) {
@@ -237,8 +273,40 @@ export const store = new Vuex.Store({
             commit('saveServerInfo', data);
         },
         async stopScheduledOperation({commit}) {
-            const {data} = await http.post('/server/stop-scheduled-operation', {}, {withCredentials: true});
-            commit('saveServerInfo', data);
+            try {
+                const {data} = await http.post('/server/stop-scheduled-operation', {}, {withCredentials: true});
+                commit('saveServerInfo', data);
+                await this._vm.$bvToast.toast(this._vm.$t('server.operations.stopOperation.success'), {
+                    title: this._vm.$t('server.operations.stopOperation.success'),
+                    variant: 'success',
+                    toaster: 'b-toaster-bottom-center',
+                    autoHideDelay: 2000
+                });
+            } catch (err) {
+                await this._vm.$bvToast.toast(this._vm.$t('server.operations.stopOperation.success'), {
+                    title: this._vm.$t('server.operations.stopOperation.error', {error: err}),
+                    variant: 'danger',
+                    toaster: 'b-toaster-bottom-center',
+                    autoHideDelay: 2000
+                });
+            }
+        },
+        async updatePlayer({commit}, {player, action}) {
+            if (!player.steamID) return;
+
+            const {
+                data: {
+                    result,
+                    changed
+                }
+            } = await http.post(`/players/${player.steamID}/${action}`, {}, {withCredentials: true});
+            if (changed) {
+                if (['set-admin', 'unset-admin'].includes(action)) {
+                    commit('saveAdminList', result);
+                } else {
+                    commit('saveBanList', result);
+                }
+            }
         },
 
         async loadServerSettings({commit}) {
@@ -276,9 +344,6 @@ export const store = new Vuex.Store({
             commit('saveServerInfo', data);
         },
 
-        socket_serverLogLine({commit}, newLine) {
-            commit('saveServerLogLine', newLine);
-        },
         socket_serverInfo({commit}, serverInfo) {
             commit('saveServerInfo', serverInfo);
         },
@@ -301,8 +366,11 @@ export const store = new Vuex.Store({
         socket_playerConnected({commit}, player) {
             commit('playerConnected', player);
         },
-        socket_playerDisconnected({commit}, id) {
-            commit('playerDisconnected', id);
+        socket_playerDisconnected({commit}, player) {
+            commit('playerDisconnected', player);
+        },
+        socket_playerUpdated({commit}, player) {
+            commit('savePlayer', player);
         },
         socket_operationStart({commit}, serverInfo) {
             commit('saveServerInfo', serverInfo);

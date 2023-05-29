@@ -5,10 +5,12 @@
 			no-body
 	>
 		<b-card-header>
-			<div class="d-flex justify-content-between w-100 h3 card-title">
-				<div v-if="serverInfo.serverName">{{ serverInfo.serverName }}</div>
+			<div class="d-flex justify-content-between w-100 h3 card-title align-items-center">
+				<div v-if="serverInfo && serverInfo.serverName">{{ serverInfo.serverName }}</div>
 				<div v-else>{{ $t('server.info') }}</div>
-				<b-icon icon="broadcast" :variant="color"/>
+				<div>
+					<b-icon icon="broadcast" :variant="color"/>
+				</div>
 			</div>
 			<div class="text-muted card-subtitle">
 				{{ subtitle }}
@@ -39,30 +41,6 @@
 				</div>
 			</b-list-group-item>
 		</b-list-group>
-		<b-card-footer v-if="isLoggedIn" class="justify-content-center d-flex align-items-center">
-			<b-button-group>
-				<b-button v-b-modal:start-server-modal v-if="serverInfo.pid === null" variant="success">
-					<b-icon icon="play"/>
-					{{ $t('server.dialogs.start.btn') }}
-				</b-button>
-				<b-button v-b-modal:force-stop-server-modal v-if="serverInfo.pid !== null" variant="danger">
-					<b-icon icon="stop-fill"/>
-					{{ $t('server.dialogs.forceStop.btn') }}
-				</b-button>
-				<b-button v-b-modal:schedule-stop-server-modal v-if="serverInfo.pid !== null" variant="danger">
-					<b-icon icon="stopwatch"/>
-					{{ $t('server.dialogs.scheduleStop.btn') }}
-				</b-button>
-				<b-button v-b-modal:schedule-restart-server-modal v-if="serverInfo.pid !== null" variant="warning">
-					<b-icon icon="arrow-clockwise"/>
-					{{ $t('server.dialogs.scheduleRestart.btn') }}
-				</b-button>
-				<b-button v-b-modal:schedule-restore-server-modal variant="warning">
-					<b-icon icon="file-earmark-zip"></b-icon>
-					{{ $t('server.dialogs.scheduleRestore.btn')}}
-				</b-button>
-			</b-button-group>
-		</b-card-footer>
 	</b-card>
 </template>
 
@@ -84,7 +62,7 @@ export default {
 		this.loadServerInfo().catch(err => console.error('Failed to load server info', err));
 	},
 	computed: {
-		...mapGetters(['serverInfo', 'isLoggedIn']),
+		...mapGetters(['serverInfo', 'isAdmin']),
 		subtitle() {
 			let subtitle = this.$t('server.state.offline');
 
@@ -111,7 +89,7 @@ export default {
 				{
 					title: this.$t('server.fields.pid'),
 					value: this.serverInfo.pid,
-					displayed: () => this.isLoggedIn && this.serverInfo.pid !== null
+					displayed: () => this.isAdmin && this.serverInfo.pid !== null
 				},
 				{
 					title: this.$t('server.fields.time'),
@@ -121,7 +99,7 @@ export default {
 				{
 					title: this.$t('server.fields.processExitCode'),
 					value: this.serverInfo.processExitCode,
-					displayed: () => this.isLoggedIn && this.serverInfo.processExitCode !== null
+					displayed: () => this.isAdmin && this.serverInfo.processExitCode !== null
 				},
 				{
 					title: this.$t('server.fields.version'),

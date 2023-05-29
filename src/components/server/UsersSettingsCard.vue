@@ -2,7 +2,7 @@
 	<div>
 		<b-card-header class="d-flex justify-content-between align-items-center">
 			<div>{{ $t('users.title') }}</div>
-			<b-button v-if="isLoggedIn" class="ml-auto" :to="{name: 'editUsersSettings'}">
+			<b-button v-if="isAdmin" class="ml-auto" :to="{name: 'editUsersSettings'}">
 				<b-icon icon="pencil"/>
 				{{ $t('app.btn.edit') }}
 			</b-button>
@@ -62,7 +62,7 @@ import {mapGetters} from "vuex";
 export default {
 	name: "UsersSettingsCard",
 	computed: {
-		...mapGetters(['isLoggedIn', 'currentAdminList', 'currentBanList'])
+		...mapGetters(['isAdmin', 'currentAdminList', 'currentBanList'])
 	}
 }
 </script>
