@@ -1,6 +1,6 @@
 <template>
 	<b-form @submit="onSubmit">
-		<b-tabs pills vertical card>
+		<b-tabs pills vertical card v-model="currentTab">
 			<b-tab v-for="(tab, index) in tabs" :key="index" :title="tab.title">
 				<vue-form-generator
 						:schema="{fields: tab.fields}"
@@ -19,21 +19,24 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {cloneDeep} from "lodash";
+import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
 
 export default {
 	name: "ServerHostSettingsForm",
+	mixins: [routerTabMixin],
 	data() {
 		return {
 			model: {},
 			formOptions: {
-				validateAfterLoad: true,
+				validateAfterLoad: false,
 				validateAfterChanged: true,
 				validateAsync: true
 			}
 		}
 	},
 	mounted() {
-		this.loadServerSettings().then(() => this.model = {...this.hostSettings});
+		this.loadServerSettings().then(() => this.model = cloneDeep(this.hostSettings));
 	},
 	computed: {
 		...mapGetters(['hostSettings', 'hostSettingsDefinition']),
@@ -62,7 +65,7 @@ export default {
 		async onSubmit(event) {
 			event.preventDefault()
 			await this.updateHostSettings(this.model);
-			await this.$router.push({name: 'showHostSettings'});
+			await this.$router.push({name: 'showHostSettings', query: {...this.$router.currentRoute.query}});
 		}
 	}
 }

@@ -23,14 +23,14 @@
 				<b-button
 						variant="warning"
 						:disabled="!isPolling"
-						@click="stopPolling"
+						@click="pausePolling"
 				>
 					<b-icon icon="pause-circle"></b-icon>
 				</b-button>
 				<b-button
 						:disabled="isPolling"
 						variant="success"
-						@click="startPolling"
+						@click="resumePolling"
 				>
 					<b-icon icon="play-circle"></b-icon>
 				</b-button>
@@ -42,40 +42,35 @@
 <script>
 export default {
 	name: "ApiLogViewer",
-	data: () => ({
-		log: '',
-		timeout: null,
-		pollDelay: 5000,
-		logName: 'api-logs',
-		activeTab: 0
-	}),
+	data() {
+		return {
+			log: '',
+			pollDelay: 5000,
+			logName: 'api-logs',
+			activeTab: 0,
+			isPaused: false,
+			logCache: new Map()
+		}
+	},
+	mounted() {
+		this.pollLog();
+	},
 	watch: {
 		activeTab(val) {
 			const tab = this.tabs[val];
 			if (tab) {
-				this.stopPolling();
-				this.logName = tab.value;
-			}
-		},
-		logName: {
-			immediate: true,
-			handler(oldVal, newVal) {
-				if (oldVal !== newVal) {
+				if (this.logCache.has(tab.value)) {
+					this.log = this.logCache.get(tab.value);
+				} else {
 					this.log = '';
 				}
-
-				if (!this.timeout) {
-					this.startPolling();
-				}
+				this.logName = tab.value;
 			}
 		}
 	},
 	computed: {
-		lineIndex() {
-			return this.log.split('\n').length - 1;
-		},
 		isPolling() {
-			return this.timeout !== null;
+			return !this.isPaused;
 		},
 		tabs() {
 			return [
@@ -95,32 +90,41 @@ export default {
 		}
 	},
 	methods: {
-		startPolling() {
-			if (this.timeout) {
-				this.stopPolling();
+		resumePolling() {
+			this.isPaused = false;
+			this.pollLog();
+		},
+		async pollLog() {
+			for await (const log of this.logData()) {
+				this.updateLog(this.logName, log);
 			}
-			this.loadLog().then(() => this.pollLog());
 		},
-		pollLog() {
-			this.timeout = setTimeout(
-					() => this.loadLog().then(this.pollLog), this.pollDelay)
+		updateLog(logName, data) {
+			this.log += data;
+			this.logCache.set(logName, data);
 		},
-		stopPolling() {
-			if (!this.timeout) return;
-			clearTimeout(this.timeout);
-			this.timeout = null;
+		pausePolling() {
+			this.isPaused = true;
 		},
-		loadLog() {
-			return this.$http.get(`/logs/${this.logName}`, {params: {from: this.lineIndex}, withCredentials: true})
-					.then(({data}) => {
-						if (data && data.length > 0) {
-							this.log += data;
-							this.pollDelay = 5000;
-						} else {
-							this.pollDelay += 5000;
-						}
+		async* logData() {
+			while (!this.isPaused) {
+				try {
+					const {data} = await this.$http.get(`/logs/${this.logName}`, {
+						params: {from: this.log.length},
+						withCredentials: true
+					});
+					if (data.length > 0) {
+						yield data;
+					}
+				} catch (err) {
+					this.$bvToast.toast(this.$t('server.logs.pollError.content', err), {
+						title: this.$t('server.logs.pollError.title'),
+						variant: 'danger'
 					})
-					.catch(err => console.error('Error retrieving logs !', err.response));
+				}
+
+				await new Promise((resolve) => setTimeout(resolve, this.pollDelay));
+			}
 		}
 	}
 }

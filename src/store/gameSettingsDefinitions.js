@@ -1,5 +1,69 @@
 import {i18n} from "@/i18n";
 import {validators} from "vue-form-generator";
+import {get, isInteger, padStart, set} from "lodash";
+import wNumb from 'wnumb';
+
+function getTime(model, field, startOrEnd) {
+    const time = {
+        hours: get(model, `${field.model}.${startOrEnd}Hour`),
+        minutes: get(model, `${field.model}.${startOrEnd}Minute`)
+    };
+    return `${time.hours ? padStart(time.hours, '0') : '00'}:${time.minutes ? padStart(time.minutes, '0') : '00'}:00`;
+}
+
+function setTime(model, value, field, startOrEnd) {
+    const [hours, minutes] = value.split(':');
+    set(model, `${field.model}.${startOrEnd}Hour`, parseInt(hours));
+    set(model, `${field.model}.${startOrEnd}Minute`, parseInt(minutes));
+}
+
+function slider(params) {
+    const pips = {
+        mode: 'steps',
+        density: 3,
+        filter(value) {
+            if (isInteger(value)) {
+                return 2;
+            } else {
+                return 0;
+            }
+        }
+    };
+
+    if (params.max && params.step) {
+        const divided = params.max * params.step;
+
+        if (divided >= 100) {
+            pips.mode = 'count';
+            pips.values = 10;
+            pips.density = 4;
+            pips.stepped = true;
+        } else if (divided >= 10 && divided < 100) {
+            pips.density = 4;
+            pips.filter = (value) => {
+                if (isInteger(value) && value % 10 === 0) {
+                    return 2;
+                } else {
+                    return 0;
+                }
+            }
+        }
+    }
+
+    return {
+        type: 'noUiSlider',
+        ...params,
+        set(model, value) {
+            set(model, this.model, value[0]);
+        },
+        noUiSliderOptions: {
+            step: params.step || 0.1,
+            tooltips: true,
+            pips,
+            ...params.noUiSliderOptions
+        }
+    };
+}
 
 export const gameSettingsDefinitions = {
     tabs: [
@@ -117,7 +181,7 @@ export const gameSettingsDefinitions = {
                             required: true
                         },
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.CanLootEnemyContainers'),
                             model: 'CanLootEnemyContainers'
                         }
@@ -127,66 +191,72 @@ export const gameSettingsDefinitions = {
                     legend: i18n.t('gameSettings.subgroup.GameSettings'),
                     fields: [
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.BloodBoundEquipment'),
                             model: 'BloodBoundEquipment'
                         },
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.TeleportBoundItems'),
                             model: 'TeleportBoundItems'
                         },
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.AllowGlobalChat'),
                             model: 'AllowGlobalChat'
                         },
                         {
-                            type: 'checkbox',
-                            label: i18n.t('gameSettings.fields.AllWaypointsUnlocked'),
-                            model: 'AllWaypointsUnlocked'
-                        },
-                        {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.FreeCastleClaim'),
                             model: 'FreeCastleClaim'
                         },
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.FreeCastleDestroy'),
                             model: 'FreeCastleDestroy'
                         },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleMinimumDistanceInFloors'),
                             model: 'CastleMinimumDistanceInFloors',
                             validator: validators.integer,
                             min: 1,
-                            max: 10
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            max: 10,
+                            step: 1
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.ClanSize'),
                             model: 'ClanSize',
                             validator: validators.integer,
                             min: 1,
-                            max: 10
-                        },
+                            max: 10,
+                            step: 1
+                        }),
                         {
-                            type: 'input',
-                            inputType: 'number',
+                            type: 'select',
                             label: i18n.t('gameSettings.fields.StarterEquipmentId'),
                             model: 'StarterEquipmentId',
-                            validator: validators.integer
+                            validator: validators.integer,
+                            required: true,
+                            values: [
+                                {id: 0, name: i18n.t('gameSettings.values.StarterEquipmentId.none')},
+                                {id: -376135143, name: i18n.t('gameSettings.values.StarterEquipmentId.copper')},
+                                {id: -1613823352, name: i18n.t('gameSettings.values.StarterEquipmentId.iron')},
+                                {id: -258598606, name: i18n.t('gameSettings.values.StarterEquipmentId.darkSilver')},
+                                {id: 1177675846, name: i18n.t('gameSettings.values.StarterEquipmentId.sanguine')},
+                            ]
                         },
                         {
-                            type: 'input',
-                            inputType: 'number',
+                            type: 'select',
                             label: i18n.t('gameSettings.fields.StarterResourcesId'),
                             model: 'StarterResourcesId',
-                            validator: validators.integer
+                            required: true,
+                            validator: validators.integer,
+                            values: [
+                                {id: 0, name: i18n.t('gameSettings.values.StarterResourcesId.none')},
+                                {id: -696202180, name: i18n.t('gameSettings.values.StarterResourcesId.copper')},
+                                {id: 481718792, name: i18n.t('gameSettings.values.StarterResourcesId.iron')},
+                                {id: -766909665, name: i18n.t('gameSettings.values.StarterResourcesId.darkSilver')}
+                            ]
                         }
                     ]
                 },
@@ -194,7 +264,7 @@ export const gameSettingsDefinitions = {
                     legend: i18n.t('gameSettings.group.Inactivity'),
                     fields: [
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.InactivityKillEnabled'),
                             model: 'InactivityKillEnabled'
                         },
@@ -203,7 +273,8 @@ export const gameSettingsDefinitions = {
                             inputType: 'number',
                             label: i18n.t('gameSettings.fields.InactivityKillTimeMin'),
                             model: 'InactivityKillTimeMin',
-                            disabled: true,
+                            min: 0,
+                            max: Number.MAX_SAFE_INTEGER,
                             validator: validators.integer
                         },
                         {
@@ -211,27 +282,27 @@ export const gameSettingsDefinitions = {
                             inputType: 'number',
                             label: i18n.t('gameSettings.fields.InactivityKillTimeMax'),
                             model: 'InactivityKillTimeMax',
-                            disabled: true,
-                            validator: validators.integer
+                            validator: validators.integer,
+                            disabled: true
                         },
                         {
                             type: 'input',
                             inputType: 'number',
                             label: i18n.t('gameSettings.fields.InactivityKillSafeTimeAddition'),
                             model: 'InactivityKillSafeTimeAddition',
-                            disabled: true,
-                            validator: validators.integer
+                            validator: validators.integer,
+                            disabled: true
                         },
                         {
                             type: 'input',
                             inputType: 'number',
                             label: i18n.t('gameSettings.fields.InactivityKillTimerMaxItemLevel'),
                             model: 'InactivityKillTimerMaxItemLevel',
-                            disabled: true,
-                            validator: validators.integer
+                            validator: validators.integer,
+                            disabled: true
                         },
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.DisableDisconnectedDeadEnabled'),
                             model: 'DisableDisconnectedDeadEnabled'
                         },
@@ -240,84 +311,79 @@ export const gameSettingsDefinitions = {
                             inputType: 'number',
                             label: i18n.t('gameSettings.fields.DisableDisconnectedDeadTimer'),
                             model: 'DisableDisconnectedDeadTimer',
-                            validator: validators.integer,
-                            disabled: true
+                            validator: validators.integer
                         },
                     ]
                 },
                 {
                     legend: i18n.t('gameSettings.subgroup.InventoryAndLoot'),
                     fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.InventoryStacksModifier'),
                             model: 'InventoryStacksModifier',
                             validator: validators.double,
                             min: 0.25,
                             step: 0.25,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.DropTableModifier_General'),
                             model: 'DropTableModifier_General',
                             validator: validators.double,
                             min: 0.25,
                             step: 0.25,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.DropTableModifier_Missions'),
                             model: 'DropTableModifier_Missions',
                             validator: validators.double,
                             min: 0.25,
                             step: 0.25,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.MaterialYieldModifier_Global'),
                             model: 'MaterialYieldModifier_Global',
                             validator: validators.double,
                             min: 0.25,
                             step: 0.25,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.BloodEssenceYieldModifier'),
                             model: 'BloodEssenceYieldModifier',
                             validator: validators.double,
                             min: 0.25,
                             step: 0.25,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.Death_DurabilityFactorLoss'),
                             model: 'Death_DurabilityFactorLoss',
                             validator: validators.double,
                             step: 0.125,
                             min: 0.125,
-                            max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            max: 5,
+                            noUiSliderOptions: {
+                                format: wNumb({
+                                    decimals: 3
+                                })
+                            }
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.Death_DurabilityLossFactorAsResources'),
                             model: 'Death_DurabilityLossFactorAsResources',
                             validator: validators.double,
                             step: 0.125,
                             min: 0.125,
-                            max: 5
-                        },
+                            max: 5,
+                            noUiSliderOptions: {
+                                format: wNumb({
+                                    decimals: 3
+                                })
+                            }
+                        }),
                     ]
                 }
             ]
@@ -329,135 +395,117 @@ export const gameSettingsDefinitions = {
                 {
                     legend: i18n.t('gameSettings.subgroup.CostModifiers'),
                     fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.BuildCostModifier'),
                             model: 'BuildCostModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            validator: validators.double,
+                            min: 0,
+                            max: 10,
+                            step: 0.1
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.RecipeCostModifier'),
                             model: 'RecipeCostModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            validator: validators.double,
+                            min: 0,
+                            max: 10,
+                            step: 0.1
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.RefinementCostModifier'),
                             model: 'RefinementCostModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.ResearchCostModifier'),
-                            model: 'ResearchCostModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            validator: validators.double,
+                            min: 0.1,
+                            max: 10,
+                            step: 0.1
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.DismantleResourceModifier'),
                             model: 'DismantleResourceModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            validator: validators.double,
+                            min: 0,
+                            max: 1,
+                            step: 0.25
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.RepairCostModifier'),
                             model: 'RepairCostModifier',
-                            validator: validators.double
-                        }
+                            validator: validators.double,
+                            min: 0,
+                            max: 10,
+                            step: 0.25
+                        })
                     ]
                 },
                 {
                     legend: i18n.t('gameSettings.subgroup.RateModifiers'),
                     fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.CraftRateModifier'),
                             model: 'CraftRateModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            validator: validators.double,
+                            min: 0.1,
+                            max: 10,
+                            step: 0.1
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.RefinementRateModifier'),
                             model: 'RefinementRateModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            validator: validators.double,
+                            min: 0.1,
+                            max: 10,
+                            step: 0.1
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.ServantConvertRateModifier'),
                             model: 'ServantConvertRateModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.ResearchTimeModifier'),
-                            model: 'ResearchTimeModifier',
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            validator: validators.double,
+                            min: 0.1,
+                            max: 20,
+                            step: 0.1
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.BloodDrainModifier'),
                             model: 'BloodDrainModifier',
                             validator: validators.double,
                             min: 0,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.DurabilityDrainModifier'),
                             model: 'DurabilityDrainModifier',
                             validator: validators.double,
                             min: 0,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.GarlicAreaStrengthModifier'),
                             model: 'GarlicAreaStrengthModifier',
                             validator: validators.double,
                             min: 0,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.HolyAreaStrengthModifier'),
                             model: 'HolyAreaStrengthModifier',
                             validator: validators.double,
                             min: 0,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.SilverStrengthModifier'),
                             model: 'SilverStrengthModifier',
                             validator: validators.double,
                             min: 0,
                             max: 5
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.SunDamageModifier'),
                             model: 'SunDamageModifier',
                             validator: validators.double,
                             min: 0,
                             max: 5
-                        },
+                        }),
                     ]
                 },
                 {
@@ -468,235 +516,184 @@ export const gameSettingsDefinitions = {
                             inputType: 'number',
                             label: i18n.t('gameSettings.fields.GameTimeModifiers.DayDurationInSeconds'),
                             model: 'GameTimeModifiers.DayDurationInSeconds',
-                            validator: validators.integer
+                            validator: validators.integer,
+                            min: 60,
+                            max: 86400,
+                            step: 1
                         },
                         {
-                            type: 'input',
-                            inputType: 'number',
+                            type: 'timePicker',
                             label: i18n.t('gameSettings.fields.GameTimeModifiers.DayStartHour'),
-                            model: 'GameTimeModifiers.DayStartHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
+                            model: 'GameTimeModifiers',
+                            get(model) {
+                                return getTime(model, this, 'DayStart')
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'DayStart');
+                            }
                         },
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.GameTimeModifiers.DayStartMinute'),
-                            model: 'GameTimeModifiers.DayStartMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                            type: 'timePicker',
                             label: i18n.t('gameSettings.fields.GameTimeModifiers.DayEndHour'),
-                            model: 'GameTimeModifiers.DayEndHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
+                            model: 'GameTimeModifiers',
+                            get(model) {
+                                return getTime(model, this, 'DayEnd')
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'DayEnd');
+                            }
                         },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.GameTimeModifiers.DayEndMinute'),
-                            model: 'GameTimeModifiers.DayEndMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.GameTimeModifiers.BloodMoonFrequency_Min'),
                             model: 'GameTimeModifiers.BloodMoonFrequency_Min',
-                            min: 0,
+                            min: 1,
+                            max: 255,
+                            step: 1,
                             validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.GameTimeModifiers.BloodMoonFrequency_Max'),
                             model: 'GameTimeModifiers.BloodMoonFrequency_Max',
-                            min: 0,
+                            min: 1,
+                            max: 255,
+                            step: 1,
                             validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.GameTimeModifiers.BloodMoonFrequency_Max'),
-                            model: 'GameTimeModifiers.BloodMoonFrequency_Max',
-                            min: 0,
+                        }),
+                        slider({
+                            label: i18n.t('gameSettings.fields.GameTimeModifiers.BloodMoonBuff'),
+                            model: 'GameTimeModifiers.BloodMoonBuff',
+                            min: 0.1,
+                            max: 1,
+                            step: 0.1,
                             validator: validators.double
-                        }
+                        })
                     ]
                 },
                 {
                     legend: i18n.t('gameSettings.subgroup.VampireStatModifiers'),
                     fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.VampireStatModifiers.MaxHealthModifier'),
                             model: 'VampireStatModifiers.MaxHealthModifier',
-                            min: 0,
+                            min: 0.1,
+                            step: 0.1,
+                            max: 5,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.VampireStatModifiers.MaxEnergyModifier'),
-                            model: 'VampireStatModifiers.MaxEnergyModifier',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.VampireStatModifiers.PhysicalPowerModifier'),
                             model: 'VampireStatModifiers.PhysicalPowerModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.VampireStatModifiers.SpellPowerModifier'),
                             model: 'VampireStatModifiers.SpellPowerModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.VampireStatModifiers.ResourcePowerModifier'),
                             model: 'VampireStatModifiers.ResourcePowerModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.VampireStatModifiers.SiegePowerModifier'),
-                            model: 'VampireStatModifiers.SiegePowerModifier',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.VampireStatModifiers.DamageReceivedModifier'),
                             model: 'VampireStatModifiers.DamageReceivedModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.VampireStatModifiers.ReviveCancelDelay'),
-                            model: 'VampireStatModifiers.ReviveCancelDelay',
-                            min: 0,
-                            validator: validators.double
-                        }
+                        })
                     ]
                 },
                 {
                     legend: i18n.t('gameSettings.subgroup.UnitStatModifiers'),
                     fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.UnitStatModifiers_Global.MaxHealthModifier'),
                             model: 'UnitStatModifiers_Global.MaxHealthModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.UnitStatModifiers_Global.PowerModifier'),
                             model: 'UnitStatModifiers_Global.PowerModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.UnitStatModifiers_VBlood.MaxHealthModifier'),
-                            model: 'UnitStatModifiers_Global.MaxHealthModifier',
-                            min: 0,
+                            model: 'UnitStatModifiers_VBlood.MaxHealthModifier',
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.UnitStatModifiers_VBlood.PowerModifier'),
-                            model: 'UnitStatModifiers_Global.PowerModifier',
-                            min: 0,
+                            model: 'UnitStatModifiers_VBlood.PowerModifier',
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
+                        }),
                     ]
                 },
                 {
                     legend: i18n.t('gameSettings.subgroup.EquipmentStatModifiers'),
                     fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.EquipmentStatModifiers_Global.MaxEnergyModifier'),
-                            model: 'EquipmentStatModifiers_Global.MaxEnergyModifier',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.EquipmentStatModifiers_Global.MaxHealthModifier'),
                             model: 'EquipmentStatModifiers_Global.MaxHealthModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.EquipmentStatModifiers_Global.ResourceYieldModifier'),
                             model: 'EquipmentStatModifiers_Global.ResourceYieldModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.EquipmentStatModifiers_Global.PhysicalPowerModifier'),
                             model: 'EquipmentStatModifiers_Global.PhysicalPowerModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.EquipmentStatModifiers_Global.SpellPowerModifier'),
                             model: 'EquipmentStatModifiers_Global.SpellPowerModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.EquipmentStatModifiers_Global.SiegePowerModifier'),
-                            model: 'EquipmentStatModifiers_Global.SiegePowerModifier',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.EquipmentStatModifiers_Global.MovementSpeedModifier'),
                             model: 'EquipmentStatModifiers_Global.MovementSpeedModifier',
-                            min: 0,
+                            min: 0.1,
+                            max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
+                        }),
                     ]
                 },
             ]
@@ -714,60 +711,48 @@ export const gameSettingsDefinitions = {
                             label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.TickPeriod'),
                             model: 'CastleStatModifiers_Global.TickPeriod',
                             min: 0,
+                            step: 1,
                             validator: validators.double
                         },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.DamageResistance'),
-                            model: 'CastleStatModifiers_Global.DamageResistance',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleDecayRateModifier'),
                             model: 'CastleDecayRateModifier',
                             min: 0,
                             max: 5,
+                            step: 0.1,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleBloodEssenceDrainModifier'),
                             model: 'CastleBloodEssenceDrainModifier',
                             min: 0.1,
                             step: 0.1,
                             max: 5,
                             validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleSiegeTimer'),
                             model: 'CastleSiegeTimer',
                             min: 10,
                             max: 1800,
+                            step: 10,
                             validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleUnderAttackTimer'),
                             model: 'CastleUnderAttackTimer',
-                            min: 0,
-                            max: 1800,
+                            min: 1,
+                            max: 180,
+                            step: 1,
                             validator: validators.integer
-                        },
+                        }),
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.AnnounceSiegeWeaponSpawn'),
                             model: 'AnnounceSiegeWeaponSpawn'
                         },
                         {
-                            type: 'checkbox',
+                            type: 'switch',
                             label: i18n.t('gameSettings.fields.ShowSiegeWeaponMapIcon'),
                             model: 'ShowSiegeWeaponMapIcon'
                         },
@@ -776,424 +761,106 @@ export const gameSettingsDefinitions = {
                 {
                     legend: i18n.t('gameSettings.subgroup.Limits'),
                     fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.SafetyBoxLimit'),
                             model: 'CastleStatModifiers_Global.SafetyBoxLimit',
                             min: 0,
+                            max: 20,
+                            step: 1,
                             validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.TombLimit'),
                             model: 'CastleStatModifiers_Global.TombLimit',
                             min: 0,
+                            max: 20,
+                            step: 1,
                             validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.VerminNestLimit'),
                             model: 'CastleStatModifiers_Global.VerminNestLimit',
                             min: 0,
+                            max: 20,
+                            step: 1,
                             validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PrisonCellLimit'),
                             model: 'CastleStatModifiers_Global.PrisonCellLimit',
                             min: 0,
+                            max: 20,
+                            step: 1,
                             validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        }),
+                        slider({
                             label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.CastleLimit'),
                             model: 'CastleStatModifiers_Global.CastleLimit',
                             min: 0,
+                            max: 5,
+                            step: 1,
                             validator: validators.integer
-                        },
+                        }),
                     ],
                 },
-                {
-                    legend: i18n.t('gameSettings.subgroup.PylonPenalties'),
-                    fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range1.Percentage'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range1.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range1.Lower'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range1.Lower',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range1.Higher'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range1.Higher',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range2.Percentage'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range2.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range2.Lower'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range2.Lower',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range2.Higher'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range2.Higher',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range3.Percentage'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range3.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range3.Lower'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range3.Lower',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range3.Higher'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range3.Higher',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range4.Percentage'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range4.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range4.Lower'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range4.Lower',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range4.Higher'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range4.Higher',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range5.Percentage'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range5.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range5.Lower'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range5.Lower',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.PylonPenalties.Range5.Higher'),
-                            model: 'CastleStatModifiers_Global.PylonPenalties.Range5.Higher',
-                            min: 0,
-                            validator: validators.double
-                        },
-                    ]
-                },
-                {
-                    legend: i18n.t('gameSettings.subgroup.FloorPenalties'),
-                    fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range1.Percentage'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range1.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range1.Lower'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range1.Lower',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range1.Higher'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range1.Higher',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range2.Percentage'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range2.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range2.Lower'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range2.Lower',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range2.Higher'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range2.Higher',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range3.Percentage'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range3.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range3.Lower'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range3.Lower',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range3.Higher'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range3.Higher',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range4.Percentage'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range4.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range4.Lower'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range4.Lower',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range4.Higher'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range4.Higher',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range5.Percentage'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range5.Percentage',
-                            min: 0,
-                            validator: validators.double
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range5.Lower'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range5.Lower',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.FloorPenalties.Range5.Higher'),
-                            model: 'CastleStatModifiers_Global.FloorPenalties.Range5.Higher',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                    ]
-                },
-                {
-                    legend: i18n.t('gameSettings.subgroup.HeartLimits'),
-                    fields: [
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level1.FloorLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level1.FloorLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level1.ServantLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level1.ServantLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level1.HeightLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level1.HeightLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level2.FloorLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level2.FloorLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level2.ServantLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level2.ServantLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level2.HeightLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level2.HeightLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level3.FloorLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level3.FloorLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level3.ServantLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level3.ServantLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level3.HeightLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level3.HeightLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level4.FloorLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level4.FloorLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level4.ServantLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level4.ServantLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level4.HeightLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level4.HeightLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level5.FloorLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level5.FloorLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level5.ServantLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level5.ServantLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level5.HeightLimit'),
-                            model: 'CastleStatModifiers_Global.HeartLimits.Level5.HeightLimit',
-                            min: 0,
-                            validator: validators.integer
-                        },
-                    ]
-                }
             ]
+        },
+        {
+            title: i18n.t('gameSettings.subgroup.HeartLimits'),
+            fields: [],
+            groups: [1, 2, 3, 4, 5].map(level => ({
+                    legend: i18n.t('gameSettings.fields.CastleStatModifiers_Global.HeartLimits.Level', {level}),
+                    fields: [
+                        slider({
+                            label: i18n.t(`gameSettings.fields.CastleStatModifiers_Global.HeartLimits.FloorLimit`),
+                            model: `CastleStatModifiers_Global.HeartLimits.Level${level}.FloorLimit`,
+                            min: 9,
+                            max: 600,
+                            step: 1,
+                            validator: validators.integer,
+                            noUiSliderOptions: {
+                                pips: {
+                                    mode: 'values',
+                                    values: [9, 100, 200, 300, 400, 500, 600],
+                                    density: 10,
+                                    filter(value) {
+                                        if (value === 9 || value === 600) {
+                                            return 1;
+                                        }
+                                        if (value % 100 === 0) {
+                                            return 2;
+                                        } else {
+                                            return 0;
+                                        }
+                                    }
+                                }
+                            }
+                        }),
+                        slider({
+                            label: i18n.t(`gameSettings.fields.CastleStatModifiers_Global.HeartLimits.ServantLimit`),
+                            model: `CastleStatModifiers_Global.HeartLimits.Level${level}.ServantLimit`,
+                            min: 0,
+                            max: 20,
+                            step: 1,
+                            validator: validators.integer
+                        }),
+                        slider({
+                            label: i18n.t(`gameSettings.fields.CastleStatModifiers_Global.HeartLimits.HeightLimit`),
+                            model: `CastleStatModifiers_Global.HeartLimits.Level${level}.HeightLimit`,
+                            min: 0,
+                            max: 6,
+                            step: 1,
+                            noUiSliderOptions: {
+                                pips: {
+                                    mode: 'steps',
+                                    density: 100
+                                }
+                            },
+                            validator: validators.integer
+                        })
+                    ]
+                })
+            )
         },
         {
             title: i18n.t('gameSettings.subgroup.PlayerInteractionSettings'),
@@ -1203,60 +870,49 @@ export const gameSettingsDefinitions = {
                     legend: i18n.t('gameSettings.subgroup.Configuration'),
                     fields: [
                         {
-                            type: 'input',
-                            inputType: 'text',
+                            type: 'select',
                             label: i18n.t('gameSettings.fields.PlayerInteractionSettings.TimeZone'),
-                            model: 'PlayerInteractionSettings.TimeZone'
+                            model: 'PlayerInteractionSettings.TimeZone',
+                            required: true,
+                            values: ['Local', 'UTC', 'PST', 'CET', 'CST'].map(timeZone => ({
+                                id: timeZone,
+                                name: i18n.t('gameSettings.values.TimeZone.' + timeZone)
+                            }))
                         },
-                        {
-                            type: 'input',
-                            inputType: 'number',
+                        slider({
                             label: i18n.t('gameSettings.fields.PvPVampireRespawnModifier'),
                             model: 'PvPVampireRespawnModifier',
                             validator: validators.double,
                             min: 0,
-                            max: 5
-                        },
+                            max: 5,
+                            step: 0.1
+                        }),
                     ]
                 },
                 {
                     legend: i18n.t('gameSettings.subgroup.VSPlayerWeekdayTime'),
                     fields: [
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.StartHour'),
-                            model: 'PlayerInteractionSettings.VSPlayerWeekdayTime.StartHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
+                            type: 'timePicker',
+                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.Start'),
+                            model: 'PlayerInteractionSettings.VSPlayerWeekdayTime',
+                            get(model) {
+                                return getTime(model, this, 'Start');
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'Start');
+                            }
                         },
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.StartMinute'),
-                            model: 'PlayerInteractionSettings.VSPlayerWeekdayTime.StartMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.EndHour'),
-                            model: 'PlayerInteractionSettings.VSPlayerWeekdayTime.EndHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.EndMinute'),
-                            model: 'PlayerInteractionSettings.VSPlayerWeekdayTime.EndMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
+                            type: 'timePicker',
+                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.End'),
+                            model: 'PlayerInteractionSettings.VSPlayerWeekdayTime',
+                            get(model) {
+                                return getTime(model, this, 'End');
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'End');
+                            }
                         },
                     ]
                 },
@@ -1264,40 +920,26 @@ export const gameSettingsDefinitions = {
                     legend: i18n.t('gameSettings.subgroup.VSPlayerWeekendTime'),
                     fields: [
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.StartHour'),
-                            model: 'PlayerInteractionSettings.VSPlayerWeekendTime.StartHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
+                            type: 'timePicker',
+                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.Start'),
+                            model: 'PlayerInteractionSettings.VSPlayerWeekendTime',
+                            get(model) {
+                                return getTime(model, this, 'Start');
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'Start');
+                            }
                         },
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.StartMinute'),
-                            model: 'PlayerInteractionSettings.VSPlayerWeekendTime.StartMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.EndHour'),
-                            model: 'PlayerInteractionSettings.VSPlayerWeekendTime.EndHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.EndMinute'),
-                            model: 'PlayerInteractionSettings.VSPlayerWeekendTime.EndMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
+                            type: 'timePicker',
+                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.End'),
+                            model: 'PlayerInteractionSettings.VSPlayerWeekendTime',
+                            get(model) {
+                                return getTime(model, this, 'End');
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'End');
+                            }
                         },
                     ]
                 },
@@ -1305,40 +947,26 @@ export const gameSettingsDefinitions = {
                     legend: i18n.t('gameSettings.subgroup.VSCastleWeekdayTime'),
                     fields: [
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.StartHour'),
-                            model: 'PlayerInteractionSettings.VSCastleWeekdayTime.StartHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
+                            type: 'timePicker',
+                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.Start'),
+                            model: 'PlayerInteractionSettings.VSCastleWeekdayTime',
+                            get(model) {
+                                return getTime(model, this, 'Start');
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'Start');
+                            }
                         },
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.StartMinute'),
-                            model: 'PlayerInteractionSettings.VSCastleWeekdayTime.StartMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.EndHour'),
-                            model: 'PlayerInteractionSettings.VSCastleWeekdayTime.EndHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.EndMinute'),
-                            model: 'PlayerInteractionSettings.VSCastleWeekdayTime.EndMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
+                            type: 'timePicker',
+                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.End'),
+                            model: 'PlayerInteractionSettings.VSCastleWeekdayTime',
+                            get(model) {
+                                return getTime(model, this, 'End');
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'End');
+                            }
                         },
                     ]
                 },
@@ -1346,40 +974,26 @@ export const gameSettingsDefinitions = {
                     legend: i18n.t('gameSettings.subgroup.VSCastleWeekendTime'),
                     fields: [
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.StartHour'),
-                            model: 'PlayerInteractionSettings.VSCastleWeekendTime.StartHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
+                            type: 'timePicker',
+                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.Start'),
+                            model: 'PlayerInteractionSettings.VSCastleWeekendTime',
+                            get(model) {
+                                return getTime(model, this, 'Start');
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'Start');
+                            }
                         },
                         {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.StartMinute'),
-                            model: 'PlayerInteractionSettings.VSCastleWeekendTime.StartMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.EndHour'),
-                            model: 'PlayerInteractionSettings.VSCastleWeekendTime.EndHour',
-                            min: 0,
-                            max: 23,
-                            validator: validators.integer
-                        },
-                        {
-                            type: 'input',
-                            inputType: 'number',
-                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.EndMinute'),
-                            model: 'PlayerInteractionSettings.VSCastleWeekendTime.EndMinute',
-                            min: 0,
-                            max: 59,
-                            validator: validators.integer
+                            type: 'timePicker',
+                            label: i18n.t('gameSettings.fields.PlayerInteractionSettings.End'),
+                            model: 'PlayerInteractionSettings.VSCastleWeekendTime',
+                            get(model) {
+                                return getTime(model, this, 'End');
+                            },
+                            set(model, value) {
+                                setTime(model, value, this, 'End');
+                            }
                         },
                     ]
                 }

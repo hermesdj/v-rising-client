@@ -101,34 +101,18 @@ export const store = new Vuex.Store({
         saveBackupList(state, backupList) {
             Vue.set(state.server, 'backups', backupList);
         },
-        playerConnected(state, player) {
-            player.isConnected = true;
-            state.server.players = state.server.players.map(p => {
-                if (p.userIndex === player.userIndex) {
-                    return player;
-                } else {
-                    return p;
-                }
-            });
-        },
-        playerDisconnected(state, player) {
-            player.isConnected = false;
-            state.server.players = state.server.players.map(p => {
-                if (p.userIndex === player.userIndex) {
-                    return player;
-                } else {
-                    return p;
-                }
-            })
-        },
         savePlayer(state, player) {
-            state.server.players = state.server.players.map(p => {
-                if (p.userIndex === player.userIndex) {
-                    return player;
-                } else {
-                    return p;
-                }
-            })
+            if (state.server.players.some(p => p.userIndex === player.userIndex)) {
+                state.server.players = state.server.players.map(p => {
+                    if (p.userIndex === player.userIndex) {
+                        return player;
+                    } else {
+                        return p;
+                    }
+                })
+            } else {
+                state.server.players.push(player);
+            }
         }
     },
     getters: {
@@ -311,8 +295,9 @@ export const store = new Vuex.Store({
 
         async loadServerSettings({commit}) {
             const {data} = await http.get('/settings', {withCredentials: true});
-            commit('saveHostSettings', {current: data.hostSettings, lastApplied: data.lastAppliedHostSettings});
-            commit('saveGameSettings', {current: data.gameSettings, lastApplied: data.lastAppliedGameSettings});
+            commit('saveHostSettings', data.hostSettings);
+            commit('saveGameSettings', data.gameSettings);
+            return data;
         },
         async loadUsers({commit}) {
             const {data} = await http.get('/users', {withCredentials: true});
@@ -364,10 +349,10 @@ export const store = new Vuex.Store({
             });
         },
         socket_playerConnected({commit}, player) {
-            commit('playerConnected', player);
+            commit('savePlayer', player);
         },
         socket_playerDisconnected({commit}, player) {
-            commit('playerDisconnected', player);
+            commit('savePlayer', player);
         },
         socket_playerUpdated({commit}, player) {
             commit('savePlayer', player);

@@ -6,6 +6,8 @@
 		<ScheduleStopServerModal/>
 		<RestartServerModal/>
 		<ScheduleRestoreServerModal/>
+		<DownloadBackupModal/>
+		<SendAnnounceModal />
 
 		<!-- Alerts -->
 		<ScheduledRestartAlert/>
@@ -38,10 +40,14 @@ import HostSettingsDiffDetectedToast from "@/components/server/toasts/HostSettin
 import GameSettingsDiffDetectedToast from "@/components/server/toasts/GameSettingsDiffDetectedToast.vue";
 import AdminListDiffDetectedToast from "@/components/server/toasts/AdminListDiffDetectedToast.vue";
 import BanListDiffDetectedToast from "@/components/server/toasts/BanListDiffDetectedToast.vue";
+import DownloadBackupModal from "@/components/server/modal/DownloadBackupModal.vue";
+import SendAnnounceModal from "@/components/server/modal/SendAnnounceModal.vue";
 
 export default {
 	name: "ServerAlerts",
 	components: {
+		SendAnnounceModal,
+		DownloadBackupModal,
 		BanListDiffDetectedToast,
 		AdminListDiffDetectedToast,
 		GameSettingsDiffDetectedToast,

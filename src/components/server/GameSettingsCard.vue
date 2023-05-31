@@ -2,12 +2,12 @@
 	<div>
 		<b-card-header class="d-flex justify-content-between align-items-center">
 			<div>{{ $t('gameSettings.title') }}</div>
-			<b-button v-if="isAdmin" class="ml-auto" :to="{name: 'editServerGameSettings'}">
+			<b-button v-if="isAdmin" class="ml-auto" :to="{name: 'editServerGameSettings', query: {...$route.query}}">
 				<b-icon icon="pencil"/>
-				{{$t('app.btn.edit')}}
+				{{ $t('app.btn.edit') }}
 			</b-button>
 		</b-card-header>
-		<b-tabs card pills vertical>
+		<b-tabs card pills vertical v-model="currentTab">
 			<b-tab
 					v-for="({title, fields, groups}, index) in tabs"
 					:key="index"
@@ -37,7 +37,7 @@
 						<div>{{ field.value }}</div>
 					</b-list-group-item>
 				</b-list-group>
-				<b-tabs v-if="groups && groups.length > 0" card pills small>
+				<b-tabs v-if="groups && groups.length > 0" card pills small v-model="currentSubTab">
 					<b-tab
 							v-for="({title, fields}, index) in groups"
 							:key="index"
@@ -77,9 +77,11 @@
 <script>
 import {mapGetters} from "vuex";
 import {formatFieldValue} from "@/store/utils";
+import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
 
 export default {
 	name: "GameSettingsCard",
+	mixins: [routerTabMixin],
 	data() {
 		return {
 			categories: [

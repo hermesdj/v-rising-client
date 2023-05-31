@@ -56,6 +56,30 @@ export default {
                 timeToStop: 'Time until restore in Minutes',
                 fileName: 'Backup file to restore'
             }
+        },
+        downloadBackup: {
+            btn: 'Download Backup',
+            title: 'Download a backup file',
+            text: 'This action will download the backup you have selected to your local computer',
+            fields: {
+                fileName: 'Backup file to download'
+            }
+        },
+        sendAnnounce: {
+            btn: 'Announce',
+            title: 'Send an Announce',
+            text: 'This action will send an announce message to the players in the in-game chat',
+            fields: {
+                message: 'The message you want to send'
+            },
+            success: {
+                title: 'Send Announce',
+                content: 'The announce message has been sent to the server !'
+            },
+            failure: {
+                title: 'Send Announce Error',
+                content: 'The following error occurred during the transmission of the announce : {message}'
+            }
         }
     },
     operations: {
@@ -86,6 +110,12 @@ export default {
             title: 'Copy Steam ID',
             success: 'SteamID {steamId} copied to the clipboard !',
             error: 'Error copying steam id : {error}'
+        },
+    },
+    logs: {
+        pollError: {
+            title: 'Polling Error',
+            content: 'Log polling encountered the following error: {message}'
         }
     }
 }

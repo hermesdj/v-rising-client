@@ -4,6 +4,7 @@
 			centered
 			header-bg-variant="info"
 			header-text-variant="light"
+			ok-variant="info"
 	>
 		<b-table
 				:items="mappedValues"
@@ -60,7 +61,7 @@ export default {
 	},
 	methods: {
 		findFieldDefinition(model) {
-			let definition = {};
+			let definition = {model};
 
 			for (const {fields = [], groups = []} of this.definition.tabs) {
 				for (const field of fields) {

@@ -41,23 +41,39 @@ const routes = [
             },
             {
                 path: 'edit',
-                component: () => import('@/views/RouterProxyPage.vue'),
+                component: () => import('@/views/EditSettings.vue'),
                 meta: {auth: true},
+                props: (route) => {
+                    const props = {title: 'No Title'};
+
+                    if (route.name === 'editServerHostSettings') {
+                        props.title = 'hostSettings.edit';
+                    } else if (route.name === 'editServerGameSettings') {
+                        props.title = 'gameSettings.edit';
+                    } else if (route.name === 'editUsersSettings') {
+                        props.title = 'users.edit';
+                    }
+
+                    return props;
+                },
                 children: [
                     {
                         path: 'host',
                         name: 'editServerHostSettings',
-                        component: () => import('@/views/EditHostSettings.vue')
+                        component: () => import('@/components/server/forms/ServerHostSettingsForm.vue'),
+                        props: {title: ''}
                     },
                     {
                         path: 'game',
                         name: 'editServerGameSettings',
-                        component: () => import('@/views/EditGameSettings.vue')
+                        component: () => import('@/components/server/forms/ServerGameSettingsForm.vue'),
+                        props: {title: 'gameSettings.edit'}
                     },
                     {
                         path: 'users',
                         name: 'editUsersSettings',
-                        component: () => import('@/views/EditUsersSettings.vue')
+                        component: () => import('@/components/server/forms/ServerUsersSettingsForm.vue'),
+                        props: {title: 'users.edit'}
                     }
                 ]
             }

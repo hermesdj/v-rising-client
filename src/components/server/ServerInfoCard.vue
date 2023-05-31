@@ -18,14 +18,14 @@
 		</b-card-header>
 		<b-list-group flush>
 			<b-list-group-item
-				v-if="rows.length === 0"
-				variant="warning"
+					v-if="rows.length === 0"
+					variant="warning"
 			>
-				{{$t('server.empty')}}
+				{{ $t('server.empty') }}
 			</b-list-group-item>
 			<b-list-group-item
 					variant="dark"
-					v-for="({title, value, icon, iconClick}, index) in rows"
+					v-for="({title, value, icon, iconClick, iconTitle}, index) in rows"
 					:key="index"
 			>
 				<div
@@ -34,7 +34,7 @@
 					<h6>{{ title }}</h6>
 					<div class="text-right">
 						{{ value || '-' }}
-						<b-button v-if="icon" size="sm" @click="iconClick">
+						<b-button v-b-tooltip v-if="icon" variant="outlined" size="sm" @click="iconClick" :title="iconTitle">
 							<b-icon :icon="icon"></b-icon>
 						</b-button>
 					</div>
@@ -111,6 +111,7 @@ export default {
 					value: this.serverInfo.steamID,
 					displayed: () => this.serverInfo.connectedToSteam,
 					icon: 'clipboard',
+					iconTitle: this.$t('server.events.copySteamId.title'),
 					iconClick: () => this.$copyText(this.serverInfo.steamID).then(() => {
 						this.$bvToast.toast(this.$t('server.events.copySteamId.success', {steamId: this.serverInfo.steamID}), {
 							autoHideDelay: 2000,
@@ -135,7 +136,10 @@ export default {
 				{
 					title: this.$t('server.fields.currentSaveNumber'),
 					value: this.serverInfo.currentSaveNumber,
-					displayed: () => this.serverInfo.isSaveLoaded
+					displayed: () => this.serverInfo.isSaveLoaded,
+					icon: 'download',
+					iconClick: () => this.$bvModal.show('download-backup-modal'),
+					iconTitle: this.$t('server.dialogs.downloadBackup.title')
 				},
 				{
 					title: this.$t('server.fields.loadedSaveGameVersion'),

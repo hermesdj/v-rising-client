@@ -5,13 +5,13 @@
 				<b-col cols="shrink">
 					<b-card-header header-border-variant="dark" header-tag="nav">
 						<b-nav pills vertical card-header>
-							<b-nav-item to="/settings/host" exact exact-active-class="active">
+							<b-nav-item to="/settings/host" exact-path exact-active-class="active">
 								{{ $t('hostSettings.title') }}
 							</b-nav-item>
-							<b-nav-item to="/settings/game" exact exact-active-class="active">
+							<b-nav-item to="/settings/game" exact-path exact-active-class="active">
 								{{ $t('gameSettings.title') }}
 							</b-nav-item>
-							<b-nav-item v-if="isAdmin" to="/settings/users" exact exact-active-class="active">
+							<b-nav-item v-if="isAdmin" to="/settings/users" exact-path exact-active-class="active">
 								{{ $t('users.title') }}
 							</b-nav-item>
 						</b-nav>

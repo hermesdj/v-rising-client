@@ -19,17 +19,17 @@ export const hostSettingsDefinitions = {
                     model: 'Description'
                 },
                 {
-                    type: 'checkbox',
+                    type: 'switch',
                     label: i18n.t('hostSettings.fields.ListOnMasterServer'),
                     model: 'ListOnMasterServer'
                 },
                 {
-                    type: 'checkbox',
+                    type: 'switch',
                     label: i18n.t('hostSettings.fields.ListOnSteam'),
                     model: 'ListOnSteam'
                 },
                 {
-                    type: 'checkbox',
+                    type: 'switch',
                     label: i18n.t('hostSettings.fields.ListOnEOS'),
                     model: 'ListOnEOS'
                 }
@@ -89,12 +89,12 @@ export const hostSettingsDefinitions = {
                     ]
                 },
                 {
-                    type: 'checkbox',
+                    type: 'switch',
                     label: i18n.t('hostSettings.fields.AdminOnlyDebugEvents'),
                     model: 'AdminOnlyDebugEvents'
                 },
                 {
-                    type: 'checkbox',
+                    type: 'switch',
                     label: i18n.t('hostSettings.fields.DisableDebugEvents'),
                     model: 'DisableDebugEvents'
                 }
@@ -124,6 +124,50 @@ export const hostSettingsDefinitions = {
             ]
         },
         {
+            title: i18n.t('hostSettings.group.API'),
+            fields: [
+                {
+                    type: 'switch',
+                    label: i18n.t('hostSettings.fields.API.Enabled'),
+                    model: 'API.Enabled'
+                },
+                {
+                    type: 'input',
+                    inputType: 'text',
+                    label: i18n.t('hostSettings.fields.API.BindAddress'),
+                    model: 'API.BindAddress'
+                },
+                {
+                    type: 'input',
+                    inputType: 'number',
+                    label: i18n.t('hostSettings.fields.API.BindPort'),
+                    model: 'API.BindPort',
+                    validator: validators.integer
+                },
+                {
+                    type: 'input',
+                    inputType: 'text',
+                    label: i18n.t('hostSettings.fields.API.BasePath'),
+                    model: 'API.BasePath'
+                },
+                {
+                    type: 'input',
+                    inputType: 'text',
+                    label: i18n.t('hostSettings.fields.API.AccessList'),
+                    model: 'API.AccessList'
+                },
+                {
+                    type: 'input',
+                    inputType: 'number',
+                    label: i18n.t('hostSettings.fields.API.PrometheusDelay'),
+                    model: 'API.PrometheusDelay',
+                    step: 1,
+                    min: 10,
+                    validator: validators.integer
+                }
+            ]
+        },
+        {
             title: i18n.t('hostSettings.group.SaveFiles'),
             fields: [
                 {
@@ -143,7 +187,7 @@ export const hostSettingsDefinitions = {
                     validator: validators.integer
                 },
                 {
-                    type: 'checkbox',
+                    type: 'switch',
                     label: i18n.t('hostSettings.fields.CompressSaveFiles'),
                     model: 'CompressSaveFiles'
                 },
@@ -159,7 +203,7 @@ export const hostSettingsDefinitions = {
                     model: 'Password'
                 },
                 {
-                    type: 'checkbox',
+                    type: 'switch',
                     label: i18n.t('hostSettings.fields.Secure'),
                     model: 'Secure'
                 },
@@ -181,7 +225,7 @@ export const hostSettingsDefinitions = {
                     model: 'Rcon.Port'
                 },
                 {
-                    type: 'checkbox',
+                    type: 'switch',
                     label: i18n.t('hostSettings.fields.Rcon.Enabled'),
                     model: 'Rcon.Enabled'
                 }

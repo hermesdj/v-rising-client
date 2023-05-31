@@ -1,6 +1,11 @@
 <template>
 	<b-form @submit="onSubmit">
-		<b-tabs pills vertical card>
+		<b-tabs
+				pills
+				vertical
+				card
+				v-model="currentTab"
+		>
 			<b-tab
 					v-for="(tab, index) in tabs"
 					:key="index"
@@ -15,11 +20,16 @@
 				>
 
 				</vue-form-generator>
-				<b-tabs pills card v-if="tab.groups && tab.groups.length > 0">
+				<b-tabs
+						pills
+						card
+						v-if="tab.groups && tab.groups.length > 0"
+						v-model="currentSubTab"
+				>
 					<b-tab
-						v-for="(group, index) in tab.groups"
-						:key="index"
-						:title="group.legend"
+							v-for="(group, index) in tab.groups"
+							:key="index"
+							:title="group.legend"
 					>
 						<vue-form-generator
 								v-if="group.fields && group.fields.length > 0"
@@ -41,21 +51,24 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {cloneDeep} from "lodash";
+import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
 
 export default {
 	name: "ServerGameSettingsForm",
+	mixins: [routerTabMixin],
 	data() {
 		return {
 			model: {},
 			formOptions: {
-				validateAfterLoad: true,
+				validateAfterLoad: false,
 				validateAfterChanged: true,
 				validateAsync: true
 			}
 		}
 	},
 	mounted() {
-		this.loadServerSettings().then(() => this.model = {...this.gameSettings});
+		this.loadServerSettings().then(() => this.model = cloneDeep(this.gameSettings));
 	},
 	computed: {
 		...mapGetters(['gameSettings', 'gameSettingsDefinition']),
@@ -84,7 +97,7 @@ export default {
 		async onSubmit(event) {
 			event.preventDefault();
 			await this.updateGameSettings(this.model);
-			await this.$router.push({name: 'showGameSettings'});
+			await this.$router.push({name: 'showGameSettings', query: {...this.$router.currentRoute.query}});
 		}
 	}
 }

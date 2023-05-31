@@ -10,9 +10,14 @@
 		</b-navbar-brand>
 
 		<b-navbar-nav class="main-menu-items">
-			<b-nav-item class="menu-item mx-2" :to="{name: 'home'}"  exact exact-active-class="active">Server State</b-nav-item>
-			<b-nav-item class="menu-item mx-2" :to="{name: 'showHostSettings'}" exact exact-active-class="active">Server Settings</b-nav-item>
-			<b-nav-item class="menu-item mx-2" v-if="isAdmin" :to="{name: 'server-logs'}" exact exact-active-class="active">Server Logs</b-nav-item>
+			<b-nav-item class="menu-item mx-2" :to="{name: 'home'}" exact exact-active-class="active">Server State
+			</b-nav-item>
+			<b-nav-item class="menu-item mx-2" :to="{name: 'showHostSettings'}" exact exact-active-class="active">Server
+				Settings
+			</b-nav-item>
+			<b-nav-item class="menu-item mx-2" v-if="isAdmin" :to="{name: 'server-logs'}" exact exact-active-class="active">
+				Server Logs
+			</b-nav-item>
 		</b-navbar-nav>
 
 		<b-navbar-nav class="ml-auto">
@@ -21,17 +26,20 @@
 					<b-icon icon="person-circle"></b-icon>&nbsp;
 					<strong>{{ user.username | upperFirst }}</strong>
 				</template>
-				<b-dropdown-header v-if="myPlayers.length > 0">{{$t('player.myPlayerList')}}</b-dropdown-header>
-				<b-dropdown-item v-for="player in myPlayers" :key="player.userIndex" @click="() => $bvModal.show(`player-info-modal-${player.userIndex}`)">
-					{{$t('player.myPlayer', player)}}
+				<b-dropdown-header v-if="myPlayers.length > 0">{{ $t('player.myPlayerList') }}</b-dropdown-header>
+				<b-dropdown-item
+						v-for="player in myPlayers" :key="player.userIndex"
+						@click="() => $bvModal.show(`player-info-modal-${player.userIndex}`)"
+				>
+					{{ $t('player.myPlayer', player) }}
 				</b-dropdown-item>
-				<b-dropdown-divider />
+				<b-dropdown-divider v-if="myPlayers.length > 0"/>
 				<b-dropdown-item @click="logout" variant="danger">
 					<b-icon icon="box-arrow-left" variant="danger"></b-icon>
-					{{$t('app.auth.signOut')}}
+					{{ $t('app.auth.signOut') }}
 				</b-dropdown-item>
 			</b-nav-item-dropdown>
-			<b-button v-else :href="loginUrl">{{$t('app.auth.signIn')}}</b-button>
+			<b-button v-else :href="loginUrl">{{ $t('app.auth.signIn') }}</b-button>
 		</b-navbar-nav>
 	</b-navbar>
 </template>
@@ -50,7 +58,7 @@ export default {
 	},
 	computed: {
 		...mapGetters(['isAdmin', 'user', 'myPlayers']),
-		loginUrl(){
+		loginUrl() {
 			return `${constants.host}api/auth/steam`
 		}
 	},

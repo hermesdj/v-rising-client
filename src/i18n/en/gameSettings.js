@@ -158,6 +158,10 @@ export default {
                 }
             },
             HeartLimits: {
+                Level: 'Level {level}',
+                FloorLimit: 'Floor Limit',
+                ServantLimit: 'Servant Limit',
+                HeightLimit: 'Height Limit',
                 Level1: {
                     FloorLimit: 'Level 1 Floor Limit',
                     ServantLimit: 'Level 1 Servant Limit',
@@ -188,10 +192,36 @@ export default {
         },
         PlayerInteractionSettings: {
             TimeZone: 'TimeZone',
+            Start: 'Start',
             StartHour: 'Start Hour',
             StartMinute: 'Start Minute',
+            End: 'End',
             EndHour: 'End Hour',
-            EndMinute: 'End Minute'
+            EndMinute: 'End Minute',
+            VSPlayerWeekdayTime: {
+                StartHour: 'VS Player Weekday Time Start Hour',
+                StartMinute: 'VS Player Weekday Time Start Minute',
+                EndHour: 'VS Player Weekday Time End Hour',
+                EndMinute: 'VS Player Weekday Time End Minute'
+            },
+            VSPlayerWeekendTime: {
+                StartHour: 'VS Player Weekend Time Start Hour',
+                StartMinute: 'VS Player Weekend Time Start Minute',
+                EndHour: 'VS Player Weekend Time End Hour',
+                EndMinute: 'VS Player Weekend Time End Minute'
+            },
+            VSCastleWeekdayTime: {
+                StartHour: 'VS Castle Weekday Time Start Hour',
+                StartMinute: 'VS Castle Weekday Time Start Minute',
+                EndHour: 'VS Castle Weekday Time End Hour',
+                EndMinute: 'VS Castle Weekday Time End Minute'
+            },
+            VSCastleWeekendTime: {
+                StartHour: 'VS Castle Weekend Time Start Hour',
+                StartMinute: 'VS Castle Weekend Time Start Minute',
+                EndHour: 'VS Castle Weekend Time End Hour',
+                EndMinute: 'VS Castle Weekend Time End Minute'
+            },
         }
     },
     group: {
@@ -264,6 +294,26 @@ export default {
         RelicSpawnType: {
             Unique: 'Unique',
             Plentiful: 'Plentiful'
+        },
+        StarterEquipmentId: {
+            none: 'No Starter Equipment',
+            copper: 'Copper Equipment (Lvl 30)',
+            iron: 'Iron Equipment (Lvl 50)',
+            darkSilver: 'Dark Silver Equipment (Lvl 70)',
+            sanguine: 'Sanguine Equipment (Level 80)'
+        },
+        StarterResourcesId: {
+            none: 'No Starter Resource',
+            copper: 'Copper Material (Lvl 30)',
+            iron: 'Iron Material (Lvl 50)',
+            darkSilver: 'Dark Silver Material (Lvl 70)'
+        },
+        TimeZone: {
+            Local: 'Local System Time',
+            UTC: 'Coordinated Universal Time',
+            PST: 'Pacific Standard Time (UTC -8)',
+            CET: 'Central European Time (UTC + 1)',
+            CST: 'China Standard Time (UTC + 8)'
         }
     },
     descriptions: {
@@ -305,6 +355,19 @@ export default {
         CastleBloodEssenceDrainModifier: 'Rate for how quickly a castle consumes blood essence. A higher rate results in higher blood essence consumption',
         CastleSiegeTimer: 'The amount of time a castle is deemed as breached when enemy players break through the outer defenses. Players may not construct new structures or walls while a castle is breached and all structures are susceptible to damage while in this state. Time is defined in seconds.',
         CastleUnderAttackTimer: 'The amount of time where players are blocked from building structures or walls while being under attack. A castle is deemed under attack whenever enemy players manage to deal damage to any wall or door using explosives or siege golems.',
+
+
+        BuildCostModifier: 'Multiplies the amount of materials required to build structures.',
+        RecipeCostModifier: 'Multiplies the cost of crafting items.',
+        CraftRateModifier: 'The rate for crafting items and equipment in crafting stations, a higher rate results in more rapid crafting (not refinement stations) ',
+        RefinementCostModifier: 'Multiplies the cost of refining items.',
+        RefinementRateModifier: 'Rate for how quickly materials are refined. A higher rate result in more rapid refinement.',
+        DismantleResourceModifier: 'The material reimbursement players receive from dismantling a structure.',
+        ServantConvertRateModifier: 'Rate for how quickly humans turn into servants. A higher rate result in more rapid conversion.',
+        RepairCostModifier: 'Modifies the cost for repairing an item',
+        Death_DurabilityFactorLoss: 'The amount of durability loss that equipment suffer upon death when defeated in PvP. Players are deemed as in PvP for a duration after dealing damage to another player or receiving damage from another player.',
+        Death_DurabilityLossFactorAsResources: 'Durability loss suffered upon death is dropped as materials. This value defines the amount of materials that are either lost or dropped. A value of 0 results in all materials being lost while a value of 1 results in all materials being dropped.',
+
     },
     diff: {
         title: 'Game Settings Not Applied !',

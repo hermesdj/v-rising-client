@@ -26,6 +26,14 @@ export default {
             Password: 'RCon Password',
             Port: 'RCon Port',
             Enabled: 'RCon Enabled'
+        },
+        API: {
+            Enabled: 'API Enabled',
+            BindAddress: 'Bind Address',
+            BindPort: 'Bind Port',
+            BasePath: 'Base Path',
+            AccessList: 'Access List',
+            PrometheusDelay: "Prometheus Delay"
         }
     },
     group: {
@@ -33,6 +41,7 @@ export default {
         Security: 'Security',
         Connection: 'Connection',
         Rcon: 'RCon',
+        API: 'API',
         SaveFiles: 'Save Files',
         Configuration: 'Configuration'
     },
