@@ -366,6 +366,8 @@ export default {
         Death_DurabilityFactorLoss: 'The amount of durability loss that equipment suffer upon death when defeated in PvP. Players are deemed as in PvP for a duration after dealing damage to another player or receiving damage from another player.',
         Death_DurabilityLossFactorAsResources: 'Durability loss suffered upon death is dropped as materials. This value defines the amount of materials that are either lost or dropped. A value of 0 results in all materials being lost while a value of 1 results in all materials being dropped.',
 
+        // MODIFIE APRES AVOIR ENVOYE LE FICHIER AUX TRADUCTEURS
+        GameModeType: 'Select the Type of Game for the server : PvP or PvE',
     },
     diff: {
         title: 'Game Settings Not Applied !',

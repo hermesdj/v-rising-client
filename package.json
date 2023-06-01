@@ -24,6 +24,7 @@
     "vue-form-generator": "^2.3.4",
     "vue-i18n": "^8.28.2",
     "vue-meta": "^2.4.0",
+    "vue-multiselect": "^2.1.7",
     "vue-router": "^3.6.5",
     "vue-socket.io-extended": "^4.2.0",
     "vuelidate": "^0.7.7",
