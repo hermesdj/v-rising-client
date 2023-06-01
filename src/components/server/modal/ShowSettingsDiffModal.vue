@@ -10,6 +10,7 @@
 				:items="mappedValues"
 				small
 				sticky-header
+				table-variant="light"
 		>
 
 		</b-table>
@@ -45,8 +46,8 @@ export default {
 					return ({
 						label: this.$t(this.i18nKey + '.fields.' + model),
 						type: this.$t('app.diff.type.element'),
-						oldValue: formatFieldValue({[model]: d.lhs}, fieldDefinition),
-						newValue: formatFieldValue({[model]: d.rhs}, fieldDefinition)
+						oldValue: formatFieldValue({[model]: d.rhs}, fieldDefinition),
+						newValue: formatFieldValue({[model]: d.lhs}, fieldDefinition)
 					});
 				} else if (d.kind === 'A') {
 					return ({
