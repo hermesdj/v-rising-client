@@ -355,8 +355,6 @@ export default {
         CastleBloodEssenceDrainModifier: 'Rate for how quickly a castle consumes blood essence. A higher rate results in higher blood essence consumption',
         CastleSiegeTimer: 'The amount of time a castle is deemed as breached when enemy players break through the outer defenses. Players may not construct new structures or walls while a castle is breached and all structures are susceptible to damage while in this state. Time is defined in seconds.',
         CastleUnderAttackTimer: 'The amount of time where players are blocked from building structures or walls while being under attack. A castle is deemed under attack whenever enemy players manage to deal damage to any wall or door using explosives or siege golems.',
-
-
         BuildCostModifier: 'Multiplies the amount of materials required to build structures.',
         RecipeCostModifier: 'Multiplies the cost of crafting items.',
         CraftRateModifier: 'The rate for crafting items and equipment in crafting stations, a higher rate results in more rapid crafting (not refinement stations) ',

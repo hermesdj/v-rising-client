@@ -30,9 +30,9 @@ export default {
         signOut: 'Sign Out'
     },
     menu: {
-        home: '',
-        logs: '',
-        settings: ''
+        home: 'Server State',
+        logs: 'Server Logs',
+        settings: 'Server Settings'
     },
     logs: {
         apiLogs: 'API Logs',

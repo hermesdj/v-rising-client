@@ -51,5 +51,8 @@ export default {
     },
     diffModal: {
         title: 'Host Settings Diff Modal'
+    },
+    descriptions: {
+        Name: 'The name of the serveur listed on the game server list'
     }
 }

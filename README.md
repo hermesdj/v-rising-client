@@ -1,24 +1,31 @@
-# v-rising-client
+# V Rising Sever API Web Client
 
-## Project setup
-```
+Client WEB pour le projet [V Rising Server API](https://github.com/hermesdj/v-rising-server)
+
+## Setup du projet
+
+```terminal
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
+### Compilation et rechargement à chaud du projet
+
+```terminal
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
+### Compilation et minification pour la production
+
+```terminal
 npm run build
 ```
 
-### Lints and fixes files
-```
+### Nettoyage et formattage du code
+
+```terminal
 npm run lint
 ```
 
 ### Customize configuration
+
 See [Configuration Reference](https://cli.vuejs.org/config/).
