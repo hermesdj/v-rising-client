@@ -1,46 +1,46 @@
 export default {
-    title: 'V Rising Server Manager',
+    title: "V Rising Server Manager",
     locales: {
-        fr: 'Français',
-        en: 'English'
+        fr: "Français",
+        en: "English",
     },
     values: {
-        yes: 'Yes',
-        no: 'No',
-        actions: 'Actions',
+        yes: "Oui", //'Yes',
+        no: "Non", //'No',
+        actions: "Actions", //'Actions',
     },
     btn: {
-        edit: 'Edit'
+        edit: "Edit",
     },
     messages: {
-        delay: 'In {delay} minutes'
+        delay: "Dans {delay} minutes", //'In {delay} minutes'
     },
     error: {
-        title: 'Application Error !',
-        message: 'The following error occurred during {name} : {message}'
+        title: "Erreur d'application !", //"Application Error !",
+        message: "L'erreur suivante s'est produite pendant {name} : {message}", //"The following error occurred during {name} : {message}",
     },
     diff: {
-        showDiff: 'Show Diff',
+        showDiff: "Afficher les différences", //"Show Diff",
         array: {
-            index: 'Index {index}'
+            index: "Index {index}",
         },
         type: {
-            element: 'Element changed',
-            array: 'Array modified'
-        }
+            element: "Élément modifié", //"Element changed",
+            array: "Tableau modifié", // "Array modified",
+        },
     },
     auth: {
-        signIn: 'Sign In',
-        signOut: 'Sign Out'
+        signIn: "S'inscrire", // "Sign In",
+        signOut: "Se déconnecter", // "Sign Out",
     },
     menu: {
-        home: 'Server State',
-        logs: 'Server Logs',
-        settings: 'Server Settings'
+        home: "État du serveur", // "Server State",
+        logs: "Logs du serveur", // "Server Logs",
+        settings: "Paramètres du serveur", // "Server Settings",
     },
     logs: {
-        apiLogs: 'API Logs',
-        vServerLogs: 'VRising Server Logs',
-        processLogs: 'Process Logs'
-    }
-}
+        apiLogs: "Logs API", // "API Logs",
+        vServerLogs: "Logs du serveur VRising", // "VRising Server Logs",
+        processLogs: "Logs du processus", // "Process Logs",
+    },
+};

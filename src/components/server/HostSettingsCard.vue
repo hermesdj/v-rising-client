@@ -15,25 +15,12 @@
 					:no-body="groups && groups.length > 0"
 			>
 				<b-list-group flush v-if="fields && fields.length > 0">
-					<b-list-group-item
+					<SettingsFieldItem
 							v-for="(field, index) in fields"
+							:field="field"
 							:key="index"
-							class="d-flex justify-content-between align-items-center"
-							variant="dark"
-					>
-						<b-tooltip
-								triggers="hover"
-								:target="'tooltip-field-' + field.model"
-								:disabled="!$te('hostSettings.descriptions.' + field.model)"
-								v-if="$te('gameSettings.descriptions.' + field.model)"
-						>
-							{{ $t('hostSettings.descriptions.' + field.model) }}
-						</b-tooltip>
-						<div>{{ field.label }}&nbsp;<b-icon icon="question-circle" :id="'tooltip-field-' + field.model"
-																								v-if="$te('hostSettings.descriptions.' + field.model)"/>
-						</div>
-						<div>{{ field.value }}</div>
-					</b-list-group-item>
+							namespace="hostSettings"
+					/>
 				</b-list-group>
 				<b-tabs v-if="groups && groups.length > 0" card pills small v-model="currentSubTab">
 					<b-tab
@@ -41,26 +28,16 @@
 							:key="index"
 							:title="title"
 					>
-						<b-list-group flush v-if="fields && fields.length > 0">
-							<b-list-group-item
+						<b-list-group
+								flush
+								v-if="fields && fields.length > 0"
+						>
+							<SettingsFieldItem
 									v-for="(field, index) in fields"
+									:field="field"
 									:key="index"
-									class="d-flex justify-content-between align-items-center"
-									variant="dark"
-							>
-								<b-tooltip
-										triggers="hover"
-										:target="'tooltip-field-' + field.model"
-										:disabled="!$te('hostSettings.descriptions.' + field.model)"
-										v-if="$te('gameSettings.descriptions.' + field.model)"
-								>
-									{{ $t('hostSettings.descriptions.' + field.model) }}
-								</b-tooltip>
-								<div>{{ field.label }}&nbsp;<b-icon icon="question-circle" :id="'tooltip-field-' + field.model"
-																										v-if="$te('hostSettings.descriptions.' + field.model)"/>
-								</div>
-								<div>{{ field.value }}</div>
-							</b-list-group-item>
+									namespace="hostSettings"
+							/>
 						</b-list-group>
 					</b-tab>
 				</b-tabs>
@@ -74,14 +51,16 @@ import {mapGetters} from "vuex";
 import {formatFieldValue} from "@/store/utils";
 import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
 import {hostSettingsDefinitions} from "@/settings/hostSettingsDefinitions";
+import SettingsFieldItem from "@/components/server/SettingsFieldItem.vue";
 
 export default {
 	name: "HostSettingsCard",
+	components: {SettingsFieldItem},
 	mixins: [routerTabMixin],
 	computed: {
 		...mapGetters(['hostSettings', 'isAdmin']),
-		hostSettingsDefinition(){
-				return hostSettingsDefinitions(this);
+		hostSettingsDefinition() {
+			return hostSettingsDefinitions(this);
 		},
 		tabs() {
 			return this.hostSettingsDefinition.tabs.map(tab => ({

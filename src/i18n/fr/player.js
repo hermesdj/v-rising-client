@@ -1,75 +1,85 @@
 export default {
     list: {
-        title: 'Player List',
-        connectedOnly: 'Connected Only',
-        all: 'All'
+        title: "Liste des joueurs",
+        connectedOnly: "Connecté uniquement",
+        all: "Tous",
     },
-    myPlayer: '{characterName}',
-    myPlayerList: 'Your Characters',
-    count: '{count}/{total} players connected | {count}/{total} player connected',
+    myPlayer: "{characterName}",
+    myPlayerList: "Vos personnages",
+    count: "{count}/{total} joueurs connectés | {count}/{total} joueur connecté",
     fields: {
-        userIndex: 'Id',
-        approvedUserIndex: 'Approved User ID',
-        characterName: 'Character',
-        status: 'Status',
-        disconnectReason: 'Disconnect Reason'
+        userIndex: "Id",
+        approvedUserIndex: "ID d'utilisateur approuvé",
+        characterName: "Nom du personnage :",
+        status: "Statut",
+        disconnectReason: "Motif de déconnexion",
     },
     edit: {
-        title: 'Edit'
+        title: "Edit",
     },
     tooltips: {
-        isConnected: '{characterName} is connected !',
-        isOffline: '{characterName} is offline !',
-        isAdmin: '{characterName} is admin !',
-        isBanned: '{characterName} is banned !'
+        isConnected: "{characterName} est connecté !",
+        isOffline: "{characterName} est hors ligne !",
+        isAdmin: "{characterName} est Admin !",
+        isBanned: "{characterName} est banni !",
     },
     actions: {
-        'set-admin': {
-            btn: 'Give admin rights',
+        "set-admin": {
+            btn: "Donner les droits d'admin",
             success: {
-                title: 'Admin privileges given',
-                content: 'The character {characterName} has been given admin privileges !'
-            }, failure: {
-                title: 'Set Admin failed',
-                content: 'An error occurred while giving admin privileges to {characterName} : {error}'
-            }
+                title: "Droits d'administrateur accordés",
+                content:
+                    "Le personnage {characterName} s'est vu attribuer des privilèges d'administrateur !",
+            },
+            failure: {
+                title: "Échec de l'ajout d'administrateur",
+                content:
+                    "Une erreur s'est produite lors de l'attribution des privilèges d'administrateur à {characterName} : {error}",
+            },
         },
-        'unset-admin': {
-            btn: 'Remove admin rights',
+        "unset-admin": {
+            btn: "Supprimer les droits d'administrateur",
             success: {
-                title: 'Admin privileges removed',
-                content: 'The admin privileges have been removed from the character {characterName} !'
-            }, failure: {
-                title: 'Remove Admin failed',
-                content: 'An error occurred while removing admin privileges to {characterName} : {error}'
-            }
+                title: "Suppression des privilèges d'administrateur",
+                content:
+                    "Les privilèges d'administrateur ont été retirés au personnage {characterName} !",
+            },
+            failure: {
+                title: "La suppression de l'administrateur a échoué",
+                content:
+                    "Une erreur s'est produite lors de la suppression des privilèges d'administrateur pour {characterName} : {error}",
+            },
         },
         ban: {
-            btn: 'Ban player',
+            btn: "Bannir le joueur",
             success: {
-                title: 'Character banned',
-                content: 'The character {characterName} has been banned !'
-            }, failure: {
-                title: 'Ban failed',
-                content: 'An error occurred while banning the character {characterName} : {error}'
-            }
+                title: "Personnage banni",
+                content: "Le personnage {characterName} a été banni !",
+            },
+            failure: {
+                title: "Ban échoué",
+                content:
+                    "Une erreur s'est produite lors du ban du personnage {characterName} : {error}",
+            },
         },
         unban: {
-            btn: 'Unban player',
+            btn: "Deban le joueur",
             success: {
-                title: 'Character unbanned',
-                content: 'The character {characterName} is no longer banned !'
-            }, failure: {
-                title: 'Unban failed',
-                content: 'An error occurred while unbanning character {characterName} : {error}'
-            }
-        }
+                title: "Joueur débanni",
+                content: "Le personnage {characterName} n'est plus ban !",
+            },
+            failure: {
+                title: "Unban échoué",
+                content:
+                    "Une erreur s'est produite lors de l'annulation du bannissement d'un personnage {characterName} : {error}",
+            },
+        },
     },
     info: {
-        title: 'Character {characterName}',
-        subtitle: 'ID {userIndex}',
-        connected: 'Connected',
-        disconnected: 'Disconnected',
-        disconnectReason: 'Disconnect reason : {message}'
-    }
-}
+        title: "Nom du personnage : {characterName}",
+        subtitle: "ID {userIndex}",
+        connected: "Connecté",
+        disconnected: "Déconnecté",
+        disconnectReason: "Raison de la déconnexion : {message}",
+    },
+};

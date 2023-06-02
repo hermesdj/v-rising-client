@@ -1,20 +1,5 @@
 <template>
-	<b-card no-body bg-variant="dark" class="rounded-0">
-		<b-card-header>
-			<b-tabs
-					pills
-					v-model="activeTab"
-			>
-				<b-tab
-						v-for="(tab, index) in tabs"
-						:key="index"
-						:title="tab.title"
-						:value="tab.value"
-				>
-
-				</b-tab>
-			</b-tabs>
-		</b-card-header>
+	<div>
 		<b-card-body>
 			<log-viewer class="log-wrapper" has-number :loading="isPolling" :log="log"/>
 		</b-card-body>
@@ -36,94 +21,110 @@
 				</b-button>
 			</b-button-group>
 		</b-card-footer>
-	</b-card>
+	</div>
 </template>
 
 <script>
 export default {
 	name: "ApiLogViewer",
+	props: {
+		logName: String
+	},
 	data() {
 		return {
 			log: '',
 			pollDelay: 5000,
-			logName: 'api-logs',
 			activeTab: 0,
 			isPaused: false,
-			logCache: new Map()
+			logCache: new Map(),
+			controller: null
 		}
 	},
 	mounted() {
 		this.pollLog();
 	},
 	watch: {
-		activeTab(val) {
-			const tab = this.tabs[val];
-			if (tab) {
-				if (this.logCache.has(tab.value)) {
-					this.log = this.logCache.get(tab.value);
+		logName: {
+			immediate: true,
+			handler(val) {
+				if (this.logCache.has(val)) {
+					this.log = this.logCache.get(val);
 				} else {
 					this.log = '';
 				}
-				this.logName = tab.value;
+				this.pausePolling();
+				this.resumePolling();
 			}
-		}
+		},
 	},
 	computed: {
 		isPolling() {
 			return !this.isPaused;
 		},
-		tabs() {
-			return [
-				{
-					title: this.$t('app.logs.apiLogs'),
-					value: 'api-logs'
-				},
-				{
-					title: this.$t('app.logs.vServerLogs'),
-					value: 'v-server-logs'
-				},
-				{
-					title: this.$t('app.logs.processLogs'),
-					value: 'process-logs'
-				}
-			]
-		}
 	},
 	methods: {
 		resumePolling() {
 			this.isPaused = false;
 			this.pollLog();
 		},
+		pausePolling() {
+			this.controller.abort();
+		},
 		async pollLog() {
-			for await (const log of this.logData()) {
-				this.updateLog(this.logName, log);
+			this.controller = new AbortController();
+			const signal = this.controller.signal;
+			try {
+				for await (const log of this.logData(signal)) {
+					this.updateLog(this.logName, log);
+				}
+			} catch (err) {
+				console.error(err);
+				if (err.code === 'ERR_CANCELED') {
+					this.isPaused = true;
+				} else {
+					this.$bvToast.toast(this.$t('server.logs.pollError.content', err), {
+						title: this.$t('server.logs.pollError.title'),
+						variant: 'danger'
+					})
+				}
 			}
 		},
 		updateLog(logName, data) {
 			this.log += data;
 			this.logCache.set(logName, data);
 		},
-		pausePolling() {
-			this.isPaused = true;
-		},
-		async* logData() {
-			while (!this.isPaused) {
-				try {
+		async* logData(signal) {
+			let timerId;
+
+			const cleanup = () => {
+				console.log('cleanup called');
+				this.isPaused = true;
+				clearTimeout(timerId);
+			};
+
+			try {
+				while (!this.isPaused) {
 					const {data} = await this.$http.get(`/logs/${this.logName}`, {
 						params: {from: this.log.length},
-						withCredentials: true
+						withCredentials: true,
+						signal
 					});
+
 					if (data.length > 0) {
 						yield data;
 					}
-				} catch (err) {
-					this.$bvToast.toast(this.$t('server.logs.pollError.content', err), {
-						title: this.$t('server.logs.pollError.title'),
-						variant: 'danger'
-					})
-				}
 
-				await new Promise((resolve) => setTimeout(resolve, this.pollDelay));
+					await new Promise((resolve) => {
+						timerId = setTimeout(resolve, this.pollDelay);
+						signal.addEventListener('abort', cleanup, {once: true});
+					});
+
+					if (signal.aborted) {
+						break;
+					}
+				}
+			} finally {
+				cleanup();
 			}
 		}
 	}

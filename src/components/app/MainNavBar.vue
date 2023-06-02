@@ -10,13 +10,13 @@
 		</b-navbar-brand>
 
 		<b-navbar-nav class="main-menu-items">
-			<b-nav-item class="menu-item mx-2" :to="{name: 'home'}" exact exact-active-class="active">
+			<b-nav-item class="menu-item mx-2" :to="{name: 'home'}" exact-active-class="active">
 				{{ $t('app.menu.home') }}
 			</b-nav-item>
-			<b-nav-item class="menu-item mx-2" :to="{name: 'showHostSettings'}" exact exact-active-class="active">
+			<b-nav-item class="menu-item mx-2" :to="{name: 'showHostSettings'}" exact-active-class="active">
 				{{ $t('app.menu.settings') }}
 			</b-nav-item>
-			<b-nav-item class="menu-item mx-2" v-if="isAdmin" :to="{name: 'server-logs'}" exact exact-active-class="active">
+			<b-nav-item class="menu-item mx-2" v-if="isAdmin" :to="{name: 'api-logs'}" exact-active-class="active">
 				{{ $t('app.menu.logs') }}
 			</b-nav-item>
 		</b-navbar-nav>

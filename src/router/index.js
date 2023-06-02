@@ -13,8 +13,27 @@ const routes = [
             },
             {
                 path: 'logs',
-                name: 'server-logs',
-                component: () => import('@/views/ServerLogPage.vue')
+                component: () => import('@/views/ServerLogPage.vue'),
+                children: [
+                    {
+                        path: 'api-logs',
+                        name: 'api-logs',
+                        component: () => import('@/components/server/logs/ApiLogViewer.vue'),
+                        props: (route) => ({logName: route.name})
+                    },
+                    {
+                        path: 'v-server-logs',
+                        name: 'v-server-logs',
+                        component: () => import('@/components/server/logs/ApiLogViewer.vue'),
+                        props: (route) => ({logName: route.name})
+                    },
+                    {
+                        path: 'process-logs',
+                        name: 'process-logs',
+                        component: () => import('@/components/server/logs/ApiLogViewer.vue'),
+                        props: (route) => ({logName: route.name})
+                    }
+                ]
             },
             {
                 path: 'settings',

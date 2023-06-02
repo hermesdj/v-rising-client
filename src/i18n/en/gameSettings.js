@@ -439,7 +439,12 @@ export default {
         Death_DurabilityLossFactorAsResources: 'Durability loss suffered upon death is dropped as materials. This value defines the amount of materials that are either lost or dropped. A value of 0 results in all materials being lost while a value of 1 results in all materials being dropped.',
 
         // MODIFIE APRES AVOIR ENVOYE LE FICHIER AUX TRADUCTEURS
-        GameModeType: 'Select the Type of Game for the server : PvP or PvE',
+        GameModeType: 'Select the Type of Game for the server : Player versus Player or Player versus Environment',
+        CastleDamageMode: {
+            Never: 'Players may never deal damage to enemy castle structures',
+            Always: 'Players may always deal damage to enemy castle structures',
+            TimeRestricted: 'Players may only damage enemy castle structures during certain real-time frames',
+        }
     },
     diff: {
         title: 'Game Settings Not Applied !',
