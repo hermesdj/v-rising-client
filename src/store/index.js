@@ -30,7 +30,10 @@ export const store = new Vuex.Store({
                 isSaveLoaded: false,
                 isSaveVersionIdentical: null,
                 scheduledOperation: null,
-                currentSaveNumber: null
+                currentSaveNumber: null,
+                publicIp: null,
+                gamePort: null,
+                queryPort: null
             },
             operationError: null,
             players: [],

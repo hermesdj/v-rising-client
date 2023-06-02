@@ -13,10 +13,11 @@ export const hostSettingsDefinitions = (app) => {
                         model: 'Name'
                     },
                     {
-                        type: 'input',
-                        inputType: 'text',
+                        type: 'textArea',
                         label: app.$t('hostSettings.fields.Description'),
-                        model: 'Description'
+                        model: 'Description',
+                        rows: 10,
+                        validator: validators.string
                     },
                     {
                         type: 'switch',

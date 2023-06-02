@@ -22,7 +22,7 @@
 					/>
 				</b-list-group>
 				<b-tabs
-						v-if="groups && groups.length > 0 && groups.length < 6"
+						v-if="groups && groups.length > 0 && groups.length < 10"
 						card
 						pills
 						small
@@ -42,7 +42,7 @@
 						</b-list-group>
 					</b-tab>
 				</b-tabs>
-				<template v-else-if="groups && groups.length >= 6">
+				<template v-else-if="groups && groups.length >= 10">
 					<b-tabs
 							v-model="currentSubTab"
 							pills

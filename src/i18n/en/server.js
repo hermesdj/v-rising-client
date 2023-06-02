@@ -1,6 +1,7 @@
 export default {
     info: 'Server Info',
     empty: 'No Data to display for now...',
+    connect: 'Connect',
     state: {
         offline: 'Server is Offline',
         configReady: 'Server has loaded the configuration',

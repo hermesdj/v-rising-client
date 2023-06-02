@@ -23,7 +23,7 @@
 				<b-tabs
 						pills
 						card
-						v-if="tab.groups && tab.groups.length > 0 && tab.groups.length < 6"
+						v-if="tab.groups && tab.groups.length > 0 && tab.groups.length < 10"
 						v-model="currentSubTab"
 				>
 					<b-tab
@@ -41,7 +41,7 @@
 						</vue-form-generator>
 					</b-tab>
 				</b-tabs>
-				<template v-else-if="tab.groups && tab.groups.length >= 6">
+				<template v-else-if="tab.groups && tab.groups.length >= 10">
 					<b-tabs
 							v-model="currentSubTab"
 							pills
