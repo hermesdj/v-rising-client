@@ -5,3 +5,7 @@ export const messages = {
     en,
     fr
 };
+
+export function supportedLocales(){
+    return Object.keys(messages);
+}

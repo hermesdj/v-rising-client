@@ -40,6 +40,7 @@
 <script>
 import {mapGetters} from "vuex";
 import ShowSettingsDiffModal from "@/components/server/modal/ShowSettingsDiffModal.vue";
+import {gameSettingsDefinitions} from "@/settings/gameSettingsDefinitions";
 
 export default {
 	name: "GameSettingsDiffDetectedToast",
@@ -48,9 +49,11 @@ export default {
 		...mapGetters([
 			'isAdmin',
 			'scheduledOperation',
-			'gameSettingsDiff',
-			'gameSettingsDefinition'
+			'gameSettingsDiff'
 		]),
+		gameSettingsDefinition() {
+			return gameSettingsDefinitions(this);
+		},
 	}
 }
 </script>

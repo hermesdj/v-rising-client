@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {http} from "@/plugins/http";
-import {gameSettingsDefinitions} from "@/store/gameSettingsDefinitions";
-import {hostSettingsDefinitions} from "@/store/hostSettingsDefinitions";
 import {flatten} from "flat";
 import {diff} from 'deep-diff';
 
@@ -15,10 +13,6 @@ export const store = new Vuex.Store({
             username: null,
             isAdmin: false,
             isPlayer: false
-        },
-        definitions: {
-            gameSettingsDefinitions,
-            hostSettingsDefinitions
         },
         server: {
             logs: [],
@@ -191,9 +185,6 @@ export const store = new Vuex.Store({
             if (!state.server.banList.current || !state.server.banList.lastApplied) return [];
             const result = diff(state.server.banList.current, state.server.banList.lastApplied);
             return result !== undefined ? result : [];
-        },
-        hostSettingsDefinition(state) {
-            return state.definitions.hostSettingsDefinitions;
         },
         gameSettingsDefinition(state) {
             return state.definitions.gameSettingsDefinitions;

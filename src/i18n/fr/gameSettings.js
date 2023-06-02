@@ -1,5 +1,5 @@
 export default {
-    title: 'Options', //'Configurations',
+    title: 'Options de Jeu', //'Configurations',
     edit: 'Configurer les options', //'Edit Game Settings',
     fields: {
         GameModeType: 'Mode de jeu', //'Game Mode Type',
@@ -11,7 +11,7 @@ export default {
         DeathContainerPermission: 'Permissions des << death container >>', // TRAD À REVOIR 'Death Container Permissions',
         RelicSpawnType: 'Type de génération des reliques',//'Relic Spawn Type',
         CanLootEnemyContainers: 'Peut récupérer l\'inventaire d\'un ennemi',//'Can Loot Enemy Containers',
-        BloodBoundEquipment: 'Équipement << lié par le sang >>',//TRAD À REVOIR 'Blood Bound Equipment',
+        BloodBoundEquipment: 'Équipement lié par le sang',//TRAD À REVOIR 'Blood Bound Equipment',
         TeleportBoundItems: 'Objets de téléportation',//TRAD À REVOIR 'Teleport Bound Items',
         AllowGlobalChat: 'Autoriser le chat global',//'Allow Global Chat',
         AllWaypointsUnlocked: 'Tous les points de passage débloqués',// TRAD "waypoints" à laisser en anglais et pas en français ?? 'All Waypoints Unlocked',

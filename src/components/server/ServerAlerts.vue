@@ -42,6 +42,7 @@ import AdminListDiffDetectedToast from "@/components/server/toasts/AdminListDiff
 import BanListDiffDetectedToast from "@/components/server/toasts/BanListDiffDetectedToast.vue";
 import DownloadBackupModal from "@/components/server/modal/DownloadBackupModal.vue";
 import SendAnnounceModal from "@/components/server/modal/SendAnnounceModal.vue";
+import {hostSettingsDefinitions} from "@/settings/hostSettingsDefinitions";
 
 export default {
 	name: "ServerAlerts",
@@ -94,11 +95,12 @@ export default {
 			'operationError',
 			'hostSettingsDiff',
 			'gameSettingsDiff',
-			'gameSettingsDefinition',
-			'hostSettingsDefinition',
 			'adminListDiff',
 			'banListDiff'
 		]),
+		hostSettingsDefinition(){
+			return hostSettingsDefinitions(this);
+		},
 		mappedValues() {
 			const options = this.scheduledOperation && this.scheduledOperation.options ? this.scheduledOperation.options : {};
 			return {

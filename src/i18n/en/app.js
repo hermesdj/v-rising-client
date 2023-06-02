@@ -1,12 +1,17 @@
 export default {
     title: 'V Rising Server Manager',
+    locales: {
+        fr: 'Français',
+        en: 'English'
+    },
     values: {
         yes: 'Yes',
         no: 'No',
         actions: 'Actions',
     },
     btn: {
-        edit: 'Edit'
+        edit: 'Edit',
+        submit: 'Submit'
     },
     messages: {
         delay: 'In {delay} minutes'

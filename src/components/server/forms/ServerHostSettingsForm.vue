@@ -12,7 +12,7 @@
 			</b-tab>
 		</b-tabs>
 		<b-card-footer class="text-right">
-			<b-button type="submit" variant="primary">Submit</b-button>
+			<b-button type="submit" variant="primary">{{$t('app.btn.submit')}}</b-button>
 		</b-card-footer>
 	</b-form>
 </template>
@@ -21,6 +21,7 @@
 import {mapActions, mapGetters} from "vuex";
 import {cloneDeep} from "lodash";
 import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
+import {hostSettingsDefinitions} from "@/settings/hostSettingsDefinitions";
 
 export default {
 	name: "ServerHostSettingsForm",
@@ -39,7 +40,10 @@ export default {
 		this.loadServerSettings().then(() => this.model = cloneDeep(this.hostSettings));
 	},
 	computed: {
-		...mapGetters(['hostSettings', 'hostSettingsDefinition']),
+		...mapGetters(['hostSettings']),
+		hostSettingsDefinition(){
+			return hostSettingsDefinitions(this);
+		},
 		schema() {
 			return this.hostSettingsDefinition;
 		},

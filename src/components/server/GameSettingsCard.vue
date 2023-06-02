@@ -15,60 +15,64 @@
 					:no-body="groups && groups.length > 0"
 			>
 				<b-list-group flush v-if="fields && fields.length > 0">
-					<b-list-group-item
+					<SettingsFieldItem
 							v-for="(field, index) in fields"
+							:field="field"
 							:key="index"
-							class="d-flex justify-content-between align-items-center"
-							variant="dark"
-					>
-						<b-tooltip
-								triggers="hover"
-								:target="'tooltip-field-' + field.model"
-								:disabled="!$te('gameSettings.descriptions.' + field.model)"
-								v-if="$te('gameSettings.descriptions.' + field.model)"
-						>
-							{{ $t('gameSettings.descriptions.' + field.model) }}
-						</b-tooltip>
-						<div>
-							{{ field.label }}
-							&nbsp;<b-icon icon="question-circle" :id="'tooltip-field-' + field.model"
-														v-if="$te('gameSettings.descriptions.' + field.model)"/>
-						</div>
-						<div>{{ field.value }}</div>
-					</b-list-group-item>
+					/>
 				</b-list-group>
-				<b-tabs v-if="groups && groups.length > 0" card pills small v-model="currentSubTab">
+				<b-tabs
+						v-if="groups && groups.length > 0 && groups.length < 6"
+						card
+						pills
+						small
+						v-model="currentSubTab"
+				>
 					<b-tab
 							v-for="({title, fields}, index) in groups"
 							:key="index"
 							:title="title"
-
 					>
 						<b-list-group flush v-if="fields && fields.length > 0">
-							<b-list-group-item
+							<SettingsFieldItem
 									v-for="(field, index) in fields"
+									:field="field"
 									:key="index"
-									class="d-flex justify-content-between align-items-center"
-									variant="dark"
-							>
-								<b-tooltip
-										triggers="hover"
-										:target="'tooltip-field-' + field.model"
-										:disabled="!$te('gameSettings.descriptions.' + field.model)"
-										v-if="$te('gameSettings.descriptions.' + field.model)"
-								>
-									{{ $t('gameSettings.descriptions.' + field.model) }}
-								</b-tooltip>
-								<div>
-									{{ field.label }}
-									&nbsp;<b-icon icon="question-circle" :id="'tooltip-field-' + field.model"
-																v-if="$te('gameSettings.descriptions.' + field.model)"/>
-								</div>
-								<div>{{ field.value }}</div>
-							</b-list-group-item>
+							/>
 						</b-list-group>
 					</b-tab>
 				</b-tabs>
+				<template v-else-if="groups && groups.length >= 6">
+					<b-tabs
+							v-model="currentSubTab"
+							pills
+							card
+							small
+					>
+						<b-tab
+								v-for="({letter, subGroups}, index) in splitGroups(groups)"
+								:key="`tab-${index}`"
+								:title="letter"
+						>
+							<div
+									v-for="({title, fields}, index) in subGroups"
+									:key="`subgroup-${index}`"
+							>
+								<p class="h4 mb-2">{{title}}</p>
+								<b-list-group
+										flush
+								>
+									<SettingsFieldItem
+											v-for="(field, index) in fields"
+											:field="field"
+											:key="index"
+									/>
+								</b-list-group>
+								<hr />
+							</div>
+						</b-tab>
+					</b-tabs>
+				</template>
 			</b-tab>
 		</b-tabs>
 	</div>
@@ -76,11 +80,14 @@
 
 <script>
 import {mapGetters} from "vuex";
-import {formatFieldValue} from "@/store/utils";
+import {formatField, splitGroups} from "@/store/utils";
 import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
+import {gameSettingsDefinitions} from "@/settings/gameSettingsDefinitions";
+import SettingsFieldItem from "@/components/server/SettingsFieldItem.vue";
 
 export default {
 	name: "GameSettingsCard",
+	components: {SettingsFieldItem},
 	mixins: [routerTabMixin],
 	data() {
 		return {
@@ -99,24 +106,24 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['gameSettings', 'gameSettingsDefinition', 'isAdmin']),
+		...mapGetters(['gameSettings', 'isAdmin']),
+		gameSettingsDefinition() {
+			return gameSettingsDefinitions(this);
+		},
 		tabs() {
 			return this.gameSettingsDefinition.tabs.map(tab => ({
 				title: tab.title,
-				fields: tab.fields ? tab.fields.map(field => ({
-					label: field.label,
-					value: formatFieldValue(this.gameSettings, field),
-					model: field.model
-				})) : [],
+				fields: tab.fields ? tab.fields.map((field) => formatField(this.gameSettings, field)) : [],
 				groups: tab.groups ? tab.groups.map(group => ({
 					title: group.legend,
-					fields: group.fields.map(field => ({
-						label: field.label,
-						value: formatFieldValue(this.gameSettings, field),
-						model: field.model
-					}))
+					fields: group.fields.map((field) => formatField(this.gameSettings, field))
 				})) : []
 			}))
+		}
+	},
+	methods: {
+		splitGroups(groups) {
+			return splitGroups(groups);
 		}
 	}
 }

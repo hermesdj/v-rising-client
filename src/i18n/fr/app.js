@@ -1,5 +1,9 @@
 export default {
     title: 'V Rising Server Manager',
+    locales: {
+        fr: 'Français',
+        en: 'English'
+    },
     values: {
         yes: 'Yes',
         no: 'No',

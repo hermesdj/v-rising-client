@@ -73,12 +73,16 @@
 import {mapGetters} from "vuex";
 import {formatFieldValue} from "@/store/utils";
 import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
+import {hostSettingsDefinitions} from "@/settings/hostSettingsDefinitions";
 
 export default {
 	name: "HostSettingsCard",
 	mixins: [routerTabMixin],
 	computed: {
-		...mapGetters(['hostSettings', 'hostSettingsDefinition', 'isAdmin']),
+		...mapGetters(['hostSettings', 'isAdmin']),
+		hostSettingsDefinition(){
+				return hostSettingsDefinitions(this);
+		},
 		tabs() {
 			return this.hostSettingsDefinition.tabs.map(tab => ({
 				title: tab.title,

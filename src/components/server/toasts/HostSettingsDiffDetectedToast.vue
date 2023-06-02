@@ -40,6 +40,7 @@
 <script>
 import {mapGetters} from "vuex";
 import ShowSettingsDiffModal from "@/components/server/modal/ShowSettingsDiffModal.vue";
+import {hostSettingsDefinitions} from "@/settings/hostSettingsDefinitions";
 
 export default {
 	name: "HostSettingsDiffDetectedToast",
@@ -48,9 +49,11 @@ export default {
 		...mapGetters([
 			'isAdmin',
 			'scheduledOperation',
-			'hostSettingsDiff',
-			'hostSettingsDefinition'
+			'hostSettingsDiff'
 		]),
+		hostSettingsDefinition(){
+			return hostSettingsDefinitions(this);
+		},
 	}
 }
 </script>

@@ -5,3 +5,4 @@ export * from './vue-form-generator';
 export * from './clipboard';
 export * from './meta';
 export * from './logViewer';
+export * from './country-flags';

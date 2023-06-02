@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import MainNavBar from "@/components/nav/MainNavBar.vue";
+import MainNavBar from "@/components/app/MainNavBar.vue";
 import VampireThroneBackground from "@/layouts/VampireThroneBackground.vue";
 import ServerAlerts from "@/components/server/ServerAlerts.vue";
 import PlayerModals from "@/components/players/PlayerModals.vue";

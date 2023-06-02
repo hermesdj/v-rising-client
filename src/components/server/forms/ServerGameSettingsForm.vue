@@ -23,7 +23,7 @@
 				<b-tabs
 						pills
 						card
-						v-if="tab.groups && tab.groups.length > 0"
+						v-if="tab.groups && tab.groups.length > 0 && tab.groups.length < 6"
 						v-model="currentSubTab"
 				>
 					<b-tab
@@ -41,10 +41,33 @@
 						</vue-form-generator>
 					</b-tab>
 				</b-tabs>
+				<template v-else-if="tab.groups && tab.groups.length >= 6">
+					<b-tabs
+							v-model="currentSubTab"
+							pills
+							card
+							small
+					>
+						<b-tab
+								v-for="({letter, subGroups}, index) in splitGroups(tab.groups)"
+								:key="`tab-${index}`"
+								:title="letter"
+						>
+							<vue-form-generator
+									v-if="subGroups && subGroups.length > 0"
+									:schema="{groups: subGroups}"
+									:model="model"
+									:options="formOptions"
+							>
+
+							</vue-form-generator>
+						</b-tab>
+					</b-tabs>
+				</template>
 			</b-tab>
 		</b-tabs>
 		<b-card-footer class="text-right">
-			<b-button type="submit" variant="primary">Submit</b-button>
+			<b-button type="submit" variant="primary">{{$t('app.btn.submit')}}</b-button>
 		</b-card-footer>
 	</b-form>
 </template>
@@ -53,6 +76,8 @@
 import {mapActions, mapGetters} from "vuex";
 import {cloneDeep} from "lodash";
 import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
+import {gameSettingsDefinitions} from "@/settings/gameSettingsDefinitions";
+import {splitGroups} from "@/store/utils";
 
 export default {
 	name: "ServerGameSettingsForm",
@@ -71,7 +96,10 @@ export default {
 		this.loadServerSettings().then(() => this.model = cloneDeep(this.gameSettings));
 	},
 	computed: {
-		...mapGetters(['gameSettings', 'gameSettingsDefinition']),
+		...mapGetters(['gameSettings']),
+		gameSettingsDefinition() {
+			return gameSettingsDefinitions(this);
+		},
 		schema() {
 			return this.gameSettingsDefinition;
 		},
@@ -98,6 +126,9 @@ export default {
 			event.preventDefault();
 			await this.updateGameSettings(this.model);
 			await this.$router.push({name: 'showGameSettings', query: {...this.$router.currentRoute.query}});
+		},
+		splitGroups(groups) {
+			return splitGroups(groups);
 		}
 	}
 }

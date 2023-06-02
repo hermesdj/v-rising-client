@@ -59,6 +59,8 @@ export default {
         Death_DurabilityLossFactorAsResources: 'Death Durability Resource Factor Loss',
         StarterEquipmentId: 'Starter Equipment Id',
         StarterResourcesId: 'Starter Resources Id',
+        UnlockedAchievements: 'Unlocked Achievements',
+        UnlockedResearchs: "Unlocked Researches",
         GameTimeModifiers: {
             DayDurationInSeconds: 'Day Duration In Seconds',
             DayStartHour: 'Day Start Hour',
@@ -222,6 +224,10 @@ export default {
                 EndHour: 'VS Castle Weekend Time End Hour',
                 EndMinute: 'VS Castle Weekend Time End Minute'
             },
+        },
+        VBloodUnits: {
+            UnitLevel: 'Unit Level',
+            DefaultUnlocked: 'Default Unlocked'
         }
     },
     group: {
@@ -251,7 +257,8 @@ export default {
         CastleStatModifiers: 'Castle Statistics',
         PlayerInteractionSettings: 'Player Interaction Settings',
         CostModifiers: 'Costs',
-        RateModifiers: 'Rates'
+        RateModifiers: 'Rates',
+        VBloodUnitSettings: 'VBlood Units Settings'
     },
     values: {
         GameModeType: {
@@ -314,6 +321,71 @@ export default {
             PST: 'Pacific Standard Time (UTC -8)',
             CET: 'Central European Time (UTC + 1)',
             CST: 'China Standard Time (UTC + 8)'
+        },
+        UnlockedAchievements: {
+            CollectingTheRemains: 'Collecting The Remains',
+            WieldingTheSword: 'Wielding The Sword',
+            MasteringMagic: 'Mastering Magic',
+            ArmourOfBones: 'ArmourOfBones',
+            IntoTheWoods: 'Into The Woods',
+            StoneBreaker: 'Stone Breaker',
+            LordOfShadows: 'Lord Of Shadows',
+            Fortify: 'Fortify',
+            GettingReadyForTheHunt: 'Getting Ready For The Hunt',
+            BloodHunt: 'Blood Hunt',
+            TheFirstBookInTheLibrary: 'The First Book In The Library',
+            ExpandingMyDomain: 'Expanding My Domain',
+            BuildingACastle: 'Building A Castle',
+            LordOfTheManor: 'Lord Of The Manor',
+            Servants: 'Servants',
+            ArmyOfDarkness: 'Army Of Darkness',
+            ThroneOfCommand: 'Throne Of Command',
+            SoulStones: 'Soul Stones',
+            BloodOfLuminance: 'Blood Of Luminance'
+        },
+        UnlockedResearchs: {
+            Tier1: 'Tier 1',
+            Tier2: 'Tier 2',
+            Tier3: 'Tier 3'
+        },
+        VBloodUnits: {
+            AlphaWolf: 'Alpha Wolf',
+            KeelyTheFrostArcher: 'Keely The Frost Archer',
+            RufusTheForeman: 'Rufus The Foreman',
+            ErrolTheStonebreaker: 'Errol The Stonebreaker',
+            LidiaTheChaosArcher: 'Lidia The Chaos Archer',
+            GraysonTheArmourer: 'Grayson The Armourer',
+            GoreswineTheRavager: 'GoreswineTheRavager',
+            PutridRat: 'Putrid Rat',
+            CliveTheFirestarter: 'Clive The Firestarter',
+            PoloraTheFeywalker: 'Polora The Feywalker',
+            FerociousBear: 'Ferocious Bear',
+            NicholausTheFallen: 'Nicholaus The Fallen',
+            QuinceyTheBanditKing: 'Quincey The Bandit King',
+            BeatriceTheTailor: 'Beatrice The Tailor',
+            VincentTheFrostbringer: 'Vincent The Frostbringer',
+            ChristinaTheSunPriestess: 'Christina The Sun Priestess',
+            LeandraTheShadowPriestess: 'Leandra The Shadow Prietess',
+            TristanTheVampireHunter: 'Tristan The Vampire Hunter',
+            TerahTheGeomancer: 'Terah The Geomancer',
+            MeredithTheBrightArcher: 'Meredith The Bright Archer',
+            FrostmawTheMountainTerror: 'Frostmaw The Mountain Terror',
+            OctavianTheMilitiaCaptain: 'Octavian The Militia Captain',
+            RazielTheShepherd: 'Raziel The Shepherd',
+            UngoraTheSpiderQueen: 'Ungora The Spider Queen',
+            TheDukeOfBalaton: 'The Duke Of Balaton',
+            FoulrotTheSoultaker: 'Foulrot The Soultaker',
+            JadeTheVampireHunter: 'Jade The Vampire Hunter',
+            WillfredWerewolfChieftain: 'Willfred Werewolf Chieftain',
+            MairwynTheElementalist: 'Mairwyn The Elementalist',
+            MorianTheStormwingMatriarch: 'Morian The Stormwing Matriarch',
+            AzarielTheSunbringer: 'Azariel The Sunbringer',
+            TerrorclawTheOgre: 'Terrorclaw The Ogre',
+            MatkaTheCurseWeaver: 'Matka The Curse Weaver',
+            NightmarshallStyxTheSunderer: 'Nightmarshall Styx The Sunderer',
+            GorecrusherTheBehemoth: 'Gorecrusher The Behemoth',
+            TheWingedHorror: 'The Winged Horror',
+            SolarusTheImmaculate: 'Solarus The Immaculate'
         }
     },
     descriptions: {

@@ -11,17 +11,18 @@
 
 		<b-navbar-nav class="main-menu-items">
 			<b-nav-item class="menu-item mx-2" :to="{name: 'home'}" exact exact-active-class="active">
-				{{$t('app.menu.home')}}
+				{{ $t('app.menu.home') }}
 			</b-nav-item>
 			<b-nav-item class="menu-item mx-2" :to="{name: 'showHostSettings'}" exact exact-active-class="active">
-				{{$t('app.menu.settings')}}
+				{{ $t('app.menu.settings') }}
 			</b-nav-item>
 			<b-nav-item class="menu-item mx-2" v-if="isAdmin" :to="{name: 'server-logs'}" exact exact-active-class="active">
-				{{$t('app.menu.logs')}}
+				{{ $t('app.menu.logs') }}
 			</b-nav-item>
 		</b-navbar-nav>
 
 		<b-navbar-nav class="ml-auto">
+			<LocaleSwitcher/>
 			<b-nav-item-dropdown right v-if="isAdmin">
 				<template #button-content>
 					<b-icon icon="person-circle"></b-icon>&nbsp;
@@ -49,9 +50,11 @@
 import {mapActions, mapGetters} from "vuex";
 import {upperFirst} from "lodash";
 import constants from "@/plugins/constants";
+import LocaleSwitcher from "@/components/app/LocaleSwitcher.vue";
 
 export default {
 	name: "MainNavBar",
+	components: {LocaleSwitcher},
 	filters: {
 		upperFirst(value) {
 			return upperFirst(value);
