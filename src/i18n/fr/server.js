@@ -1,121 +1,123 @@
 export default {
-    info: 'Server Info',
-    empty: 'No Data to display for now...',
-    state: {
-        offline: 'Server is Offline',
-        configReady: 'Server has loaded the configuration',
-        playerReady: 'Server has loaded the save "{saveName}" and is ready'
-    },
-    fields: {
-        time: 'Uptime',
-        pid: 'PID',
-        processExitCode: 'Process Exit Code',
-        version: 'Server Version',
-        steamID: 'Steam ID',
-        appID: 'App ID',
-        connectedToSteam: 'Connected to Steam',
-        serverSetupComplete: 'Server Setup Complete',
-        isSaveLoaded: 'Is Save Loaded',
-        currentSaveNumber: 'Current Save Number',
-        loadedSaveGameVersion: 'Loaded Save Game Version',
-        currentGameVersion: 'Current Game Version',
-        isSaveVersionIdentical: 'Is Save Version Identical'
-    },
-    dialogs: {
-        scheduleStop: {
-            btn: 'Schedule Stop',
-            title: 'Schedule a V Rising server stop',
-            text: 'This action will schedule the VRising server to stop in the defined amount of time',
-            fields: {
-                timeToStop: 'Time until stop in Minutes'
-            }
-        },
-        scheduleRestart: {
-            btn: 'Restart',
-            title: 'Schedule a V Rising server restart',
-            text: 'This action will schedule the VRising server to restart in the defined amount of time',
-            fields: {
-                timeToStop: 'Time until restart in Minutes'
-            }
-        },
-        forceStop: {
-            btn: 'Force Stop',
-            title: 'Force stop V Rising Server',
-            text: 'This action will immediately force stop the server without warning the players if any are connected !'
-        },
-        start: {
-            btn: 'Start',
-            title: 'Start VRising Server',
-            text: 'This action will begin the startup process of the VRising server.'
-        },
-        scheduleRestore: {
-            btn: 'Restore Backup',
-            title: 'Schedule the restoration of a previous Save Backup',
-            text: 'This action will schedule the stop of the server, the restoration of a previous save backup, and then restart the server.',
-            fields: {
-                timeToStop: 'Time until restore in Minutes',
-                fileName: 'Backup file to restore'
-            }
-        },
-        downloadBackup: {
-            btn: 'Download Backup',
-            title: 'Download a backup file',
-            text: 'This action will download the backup you have selected to your local computer',
-            fields: {
-                fileName: 'Backup file to download'
-            }
-        },
-        sendAnnounce: {
-            btn: 'Announce',
-            title: 'Send an Announce',
-            text: 'This action will send an announce message to the players in the in-game chat',
-            fields: {
-                message: 'The message you want to send'
-            },
-            success: {
-                title: 'Send Announce',
-                content: 'The announce message has been sent to the server !'
-            },
-            failure: {
-                title: 'Send Announce Error',
-                content: 'The following error occurred during the transmission of the announce : {message}'
-            }
-        }
-    },
-    operations: {
-        stopOperation: {
-            btn: 'Stop Operation',
-            title: 'Operation Stop',
-            success: 'Operation has been stopped !',
-            error: 'Stopping operation failed with error: {error}'
-        },
-        scheduledRestart: {
-            text: 'A restart operation scheduled by {username} will be executed in {remainingTimeMinutes} minute(s)',
-        },
-        scheduledStop: {
-            text: 'A restart operation scheduled by {username} will be executed in {remainingTimeMinutes} minute(s)',
-        },
-        operationError: {
-            text: 'An error occurred during the {type} operation : {message}'
-        },
-        scheduledRestore: {
-            text: 'A restore operation of backup {fileName} scheduled by {username} will be executed in {remainingTimeMinutes} minute(s)'
-        }
-    },
-    events: {
-        title: 'Server Event',
-        started: 'Server started !',
-        stopped: 'Server stopped !',
-        copySteamId: {
-            title: 'Copy Steam ID',
-            success: 'SteamID {steamId} copied to the clipboard !',
-            error: 'Error copying steam id : {error}'
-        },
-    },
-    logs: {
-        pollError: {
-            title: 'Polling Error',
-            content: 'Log polling encountered the following error: {message}'
-        }
-    }
-}
+	info: "Information server",
+	empty: "Pas de données à afficher pour l'instant...",
+	state: {
+		offline: "Le serveur est hors ligne",
+		configReady: "Le serveur a chargé la configuration",
+		playerReady:
+			"Le serveur a chargé la sauvegarde '{saveName} ' et est prêt.",
+	},
+	fields: {
+		time: "disponibilité ",
+		pid: "PID",
+		processExitCode: "Code de fin du processus",
+		version: "Version du serveur",
+		steamID: "Steam ID",
+		appID: "App ID",
+		connectedToSteam: "Connecté à Steam",
+		serverSetupComplete: "Configuration du serveur terminée",
+		isSaveLoaded: "La sauvegarde est-elle chargée ?",
+		currentSaveNumber: "Numéro de sauvegarde actuel",
+		loadedSaveGameVersion: "Version de la sauvegarde chargée",
+		currentGameVersion: "Version actuelle du jeu",
+		isSaveVersionIdentical: "La version de sauvegarde est-elle identique ?",
+	},
+	dialogs: {
+		scheduleStop: {
+			btn: "Arrêt programmé",
+			title: "Programmer un arrêt du serveur",
+			text: "Cette action planifie l'arrêt du serveur dans le délai défini.",
+			fields: {
+				timeToStop: "Temps avant arrêt en minutes",
+			},
+		},
+		scheduleRestart: {
+			btn: "Redémarrage",
+			title: "Planifier le redémarrage du serveur",
+			text: "Cette action planifie le redémarrage du serveur dans le délai défini.",
+			fields: {
+				timeToStop: "Temps avant redémarrage en minutes",
+			},
+		},
+		forceStop: {
+			btn: "Arrêt forcé",
+			title: "Forcer l'arrêt du serveur",
+			text: "Cette action va immédiatement forcer l'arrêt du serveur sans avertir les joueurs s'ils sont connectés !",
+		},
+		start: {
+			btn: "Démarrer ",
+			title: "Démarrer le serveur",
+			text: "Cette action lance le processus de démarrage du serveur VRising.",
+		},
+		scheduleRestore: {
+			btn: "Restaurer une sauvegarde",
+			title: "Planifier la restauration d'une sauvegarde antérieure",
+			text: "Cette action planifie l'arrêt du serveur, la restauration d'une sauvegarde antérieure, puis le redémarrage du serveur.",
+			fields: {
+				timeToStop: "Délai avant restauration en minutes",
+				fileName: "Fichier de sauvegarde à restaurer",
+			},
+		},
+		downloadBackup: {
+			btn: "Télécharger une sauvegarde",
+			title: "Télécharger un fichier de sauvegarde",
+			text: "Cette action téléchargera la sauvegarde que vous avez sélectionnée sur votre ordinateur local.",
+			fields: {
+				fileName: "Fichier de sauvegarde à télécharger",
+			},
+		},
+		sendAnnounce: {
+			btn: "Annonce",
+			title: "Envoyer une annonce",
+			text: "Cette action enverra un message d'annonce aux joueurs dans le chat du jeu.",
+			fields: {
+				message: "Le message que vous souhaitez envoyer",
+			},
+			success: {
+				title: "Envoi de l'annonce",
+				content: "Le message d'annonce a été envoyé au serveur !",
+			},
+			failure: {
+				title: "Erreur lors de l'envoi",
+				content:
+					"L'erreur suivante s'est produite lors de la transmission de l'annonce : {message}",
+			},
+		},
+	},
+	operations: {
+		stopOperation: {
+			btn: "Arrêt de l'opération",
+			title: "Arrêt de l'opération",
+			success: "L'opération a été interrompue !",
+			error: "L'opération d'arrêt a échoué avec une erreur : {erreur}",
+		},
+		scheduledRestart: {
+			text: "Une opération de redémarrage programmée par {username} sera exécutée dans {remainingTimeMinutes} minute(s)",
+		},
+		scheduledStop: {
+			text: "Une opération de redémarrage programmée par {username} sera exécutée dans {remainingTimeMinutes} minute(s)",
+		},
+		operationError: {
+			text: "Une erreur s'est produite lors de l'opération {type} : {message}",
+		},
+		scheduledRestore: {
+			text: "Une opération de restauration de la sauvegarde {fileName} programmée par {username} sera exécutée dans {remainingTimeMinutes} minute(s)",
+		},
+	},
+	events: {
+		title: "Événement serveur",
+		started: "Serveur démarré !",
+		stopped: "Serveur arrêté !",
+		copySteamId: {
+			title: "Copier l'identifiant Steam",
+			success: "SteamID {steamId} copié dans le presse-papiers !",
+			error: "Erreur de copie de l'ID Steam : {erreur}",
+		},
+	},
+	logs: {
+		pollError: {
+			title: "Polling Error",
+			content: "Log polling a rencontré l'erreur suivante : {message}",
+		},
+	},
+};
