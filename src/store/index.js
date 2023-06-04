@@ -308,8 +308,8 @@ export const store = new Vuex.Store({
         },
         async updateUsersSettings({commit}, {adminList, banList}) {
             const {data} = await http.post('/users', {adminList, banList}, {withCredentials: true});
-            commit('saveAdminList', data.updatedAdminList);
-            commit('saveBanList', data.updatedBanList);
+            commit('saveAdminList', data.adminList);
+            commit('saveBanList', data.banList);
         },
         async loadBackupFileNames({commit}) {
             const {data} = await http.get('/autosave/backups', {withCredentials: true});
@@ -366,7 +366,10 @@ export const store = new Vuex.Store({
         socket_operationError({commit}, error) {
             commit('saveOperationError', error);
         },
-        socket_serverStarted({commit}, {serverInfo, hostSettings, gameSettings, adminList, banList}) {
+        socket_serverStarted({commit}, {serverInfo}) {
+            commit('saveServerInfo', serverInfo);
+        },
+        socket_serverReady({commit}, {serverInfo, hostSettings, gameSettings, adminList, banList}) {
             commit('saveServerInfo', serverInfo);
             commit('saveHostSettings', hostSettings);
             commit('saveGameSettings', gameSettings);

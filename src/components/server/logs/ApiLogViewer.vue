@@ -68,7 +68,9 @@ export default {
 			this.pollLog();
 		},
 		pausePolling() {
-			this.controller.abort();
+			if (this.controller) {
+				this.controller.abort();
+			}
 		},
 		async pollLog() {
 			this.controller = new AbortController();
