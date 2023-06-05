@@ -64,7 +64,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions([
+		...mapActions('operations', [
 			'scheduleServerRestart'
 		]),
 		validateState(name) {

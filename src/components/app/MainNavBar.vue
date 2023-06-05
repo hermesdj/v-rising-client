@@ -10,14 +10,14 @@
 		</b-navbar-brand>
 
 		<b-navbar-nav class="main-menu-items">
-			<b-nav-item class="menu-item mx-2" :to="{name: 'home'}" exact-active-class="active">
-				{{ $t('app.menu.home') }}
-			</b-nav-item>
-			<b-nav-item class="menu-item mx-2" :to="{name: 'showHostSettings'}" exact-active-class="active">
-				{{ $t('app.menu.settings') }}
-			</b-nav-item>
-			<b-nav-item class="menu-item mx-2" v-if="isAdmin" :to="{name: 'api-logs'}" exact-active-class="active">
-				{{ $t('app.menu.logs') }}
+			<b-nav-item
+					class="menu-item mx-2"
+					exact-active-class="active"
+					v-for="({text, to}, index) in menu"
+					:key="index"
+					:to="to"
+			>
+				{{ text }}
 			</b-nav-item>
 		</b-navbar-nav>
 
@@ -61,13 +61,47 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['isAdmin', 'user', 'myPlayers']),
+		...mapGetters('auth', ['isAdmin', 'user']),
+		...mapGetters('players', ['myPlayers']),
 		loginUrl() {
 			return `${constants.host}api/auth/steam`
+		},
+		menu() {
+			return [
+				{
+					to: {name: 'home'},
+					text: this.$t('app.menu.home'),
+					displayed: () => true
+				},
+				{
+					to: {name: 'players'},
+					text: this.$t('app.menu.players'),
+				},
+				{
+					to: {name: 'api-logs'},
+					text: this.$t('app.menu.logs'),
+					displayed: () => this.isAdmin
+				},
+				{
+					to: {name: 'backups'},
+					text: this.$t('app.menu.backups'),
+					displayed: () => this.isAdmin
+				},
+				{
+					to: {name: 'mods'},
+					text: this.$t('app.menu.mods'),
+					displayed: () => this.isAdmin
+				},
+				{
+					to: {name: 'showHostSettings', params: {currentTabId: 0, currentSubTabId: 0}},
+					text: this.$t('app.menu.settings'),
+					displayed: () => true
+				},
+			]
 		}
 	},
 	methods: {
-		...mapActions(['logout'])
+		...mapActions('auth', ['logout'])
 	}
 }
 </script>

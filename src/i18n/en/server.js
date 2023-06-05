@@ -1,17 +1,27 @@
 export default {
     info: 'Server Info',
+    status: 'Status',
     empty: 'No Data to display for now...',
     connect: 'Connect',
     state: {
-        offline: 'Server is Offline',
-        configReady: 'Server has loaded the configuration',
-        playerReady: 'Server has loaded the save "{saveName}" and is ready'
+        offline: 'Offline',
+        configReady: 'Loaded Configuration',
+        online: 'Online'
+    },
+    tabs: {
+        overview: 'Overview',
+        players: 'Players',
+        logs: 'Logs',
+        files: 'Files',
+        backups: 'Backups',
+        settings: 'Settings'
     },
     fields: {
         time: 'Uptime',
+        ip: 'IP',
         pid: 'PID',
         processExitCode: 'Process Exit Code',
-        version: 'Server Version',
+        version: 'Version',
         steamID: 'Steam ID',
         appID: 'App ID',
         connectedToSteam: 'Connected to Steam',
@@ -24,9 +34,9 @@ export default {
     },
     dialogs: {
         scheduleStop: {
-            btn: 'Schedule Stop',
-            title: 'Schedule a V Rising server stop',
-            text: 'This action will schedule the VRising server to stop in the defined amount of time',
+            btn: 'Shut down',
+            title: 'Schedule a V Rising server shut down',
+            text: 'This action will schedule the VRising server to shut down in the defined amount of time',
             fields: {
                 timeToStop: 'Time until stop in Minutes'
             }
@@ -40,9 +50,9 @@ export default {
             }
         },
         forceStop: {
-            btn: 'Force Stop',
-            title: 'Force stop V Rising Server',
-            text: 'This action will immediately force stop the server without warning the players if any are connected !'
+            btn: 'Kill Server',
+            title: 'Kill V Rising Server',
+            text: 'This action will immediately kill the server without warning the players if any are connected !'
         },
         start: {
             btn: 'Start',
@@ -112,6 +122,11 @@ export default {
             success: 'SteamID {steamId} copied to the clipboard !',
             error: 'Error copying steam id : {error}'
         },
+        copyIp: {
+            title: 'Copy IP',
+            success: 'IP {ip} copied to the clipboard !',
+            error: 'Error copying ip : {error}'
+        }
     },
     logs: {
         pollError: {

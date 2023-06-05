@@ -42,10 +42,10 @@ export default {
 	name: "BanListDiffDetectedToast",
 	components: {ShowSettingsDiffModal},
 	computed: {
-		...mapGetters([
-			'isAdmin',
-			'scheduledOperation',
-			'banListDiff'
+		...mapGetters('auth', ['isAdmin']),
+		...mapGetters('settings', ['banListDiff']),
+		...mapGetters('operations', [
+			'scheduledOperation'
 		]),
 	}
 }

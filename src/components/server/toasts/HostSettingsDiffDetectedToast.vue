@@ -46,12 +46,10 @@ export default {
 	name: "HostSettingsDiffDetectedToast",
 	components: {ShowSettingsDiffModal},
 	computed: {
-		...mapGetters([
-			'isAdmin',
-			'scheduledOperation',
-			'hostSettingsDiff'
-		]),
-		hostSettingsDefinition(){
+		...mapGetters('auth', ['isAdmin']),
+		...mapGetters('settings', ['hostSettingsDiff']),
+		...mapGetters('operations', ['scheduledOperation']),
+		hostSettingsDefinition() {
 			return hostSettingsDefinitions(this);
 		},
 	}

@@ -30,10 +30,11 @@ export default {
 		return {}
 	},
 	computed: {
-		...mapGetters(['players', 'serverInfo'])
+		...mapGetters('players', ['players', 'serverInfo']),
+		...mapGetters('server', ['serverInfo'])
 	},
 	methods: {
-		...mapActions(['loadPlayerList'])
+		...mapActions('players', ['loadPlayerList'])
 	}
 }
 

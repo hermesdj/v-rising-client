@@ -12,25 +12,31 @@ const routes = [
                 component: () => import('@/views/HomePage.vue')
             },
             {
+                path: 'players',
+                name: 'players',
+                component: () => import('@/views/PlayersPage.vue')
+            },
+            {
                 path: 'logs',
                 component: () => import('@/views/ServerLogPage.vue'),
+                meta: {admin: true},
                 children: [
                     {
                         path: 'api-logs',
                         name: 'api-logs',
-                        component: () => import('@/components/server/logs/ApiLogViewer.vue'),
+                        component: () => import('@/components/logs/ApiLogViewer.vue'),
                         props: (route) => ({logName: route.name})
                     },
                     {
                         path: 'v-server-logs',
                         name: 'v-server-logs',
-                        component: () => import('@/components/server/logs/ApiLogViewer.vue'),
+                        component: () => import('@/components/logs/ApiLogViewer.vue'),
                         props: (route) => ({logName: route.name})
                     },
                     {
                         path: 'process-logs',
                         name: 'process-logs',
-                        component: () => import('@/components/server/logs/ApiLogViewer.vue'),
+                        component: () => import('@/components/logs/ApiLogViewer.vue'),
                         props: (route) => ({logName: route.name})
                     }
                 ]
@@ -41,27 +47,35 @@ const routes = [
                 component: () => import('@/views/ServerSettingsPage.vue'),
                 children: [
                     {
-                        path: 'host',
+                        path: 'host/:currentTabId/:currentSubTabId',
                         name: 'showHostSettings',
-                        component: () => import('@/components/server/HostSettingsCard.vue')
+                        component: () => import('@/components/settings/HostSettingsCard.vue'),
+                        props: route => ({
+                            currentTabId: parseInt(route.params.currentTabId),
+                            currentSubTabId: parseInt(route.params.currentSubTabId)
+                        })
                     },
                     {
-                        path: 'game',
+                        path: 'game/:currentTabId/:currentSubTabId',
                         name: 'showGameSettings',
-                        component: () => import('@/components/server/GameSettingsCard.vue')
+                        component: () => import('@/components/settings/GameSettingsCard.vue'),
+                        props: route => ({
+                            currentTabId: parseInt(route.params.currentTabId),
+                            currentSubTabId: parseInt(route.params.currentSubTabId)
+                        })
                     },
                     {
                         path: 'users',
                         name: 'showUsersSettings',
-                        component: () => import('@/components/server/UsersSettingsCard.vue'),
-                        meta: {auth: true}
+                        component: () => import('@/components/settings/UsersSettingsCard.vue'),
+                        meta: {admin: true}
                     }
                 ]
             },
             {
                 path: 'edit',
                 component: () => import('@/views/EditSettings.vue'),
-                meta: {auth: true},
+                meta: {admin: true},
                 props: (route) => {
                     const props = {title: 'No Title'};
 
@@ -77,24 +91,45 @@ const routes = [
                 },
                 children: [
                     {
-                        path: 'host',
+                        path: 'host/:currentTabId/:currentSubTabId',
                         name: 'editServerHostSettings',
-                        component: () => import('@/components/server/forms/ServerHostSettingsForm.vue'),
-                        props: {title: ''}
+                        component: () => import('@/components/settings/forms/ServerHostSettingsForm.vue'),
+                        props: route => ({
+                            currentTabId: parseInt(route.params.currentTabId),
+                            currentSubTabId: parseInt(route.params.currentSubTabId)
+                        })
                     },
                     {
-                        path: 'game',
+                        path: 'game/:currentTabId/:currentSubTabId',
                         name: 'editServerGameSettings',
-                        component: () => import('@/components/server/forms/ServerGameSettingsForm.vue'),
-                        props: {title: 'gameSettings.edit'}
+                        component: () => import('@/components/settings/forms/ServerGameSettingsForm.vue'),
+                        props: route => ({
+                            currentTabId: parseInt(route.params.currentTabId),
+                            currentSubTabId: parseInt(route.params.currentSubTabId)
+                        })
                     },
                     {
                         path: 'users',
                         name: 'editUsersSettings',
-                        component: () => import('@/components/server/forms/ServerUsersSettingsForm.vue'),
-                        props: {title: 'users.edit'}
+                        component: () => import('@/components/settings/forms/ServerUsersSettingsForm.vue'),
+                        props: route => ({
+                            currentTabId: parseInt(route.params.currentTabId),
+                            currentSubTabId: parseInt(route.params.currentSubTabId)
+                        })
                     }
                 ]
+            },
+            {
+                path: 'backups',
+                name: 'backups',
+                component: () => import('@/views/BackupsPage.vue'),
+                meta: {admin: true}
+            },
+            {
+                path: 'mods',
+                name: 'mods',
+                component: () => import('@/views/ModsPage.vue'),
+                meta: {admin: true}
             }
         ]
     }
@@ -106,7 +141,9 @@ export const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.meta && to.meta.auth && !store.getters['isAdmin']) {
+    if (to.meta && to.meta.auth && !store.getters['auth/isLoggedIn']) {
+        next({name: 'home'});
+    } else if (to.meta && to.meta.admin && !store.getters['auth/isAdmin']) {
         next({name: 'home'});
     } else {
         next();

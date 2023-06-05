@@ -25,7 +25,7 @@ export default {
 	name: "ForceStopServerModal",
 	components: {VModal},
 	methods: {
-		...mapActions(['forceStopServer'])
+		...mapActions('server', ['forceStopServer'])
 	}
 }
 </script>

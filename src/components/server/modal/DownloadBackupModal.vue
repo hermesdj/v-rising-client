@@ -62,10 +62,10 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['backupFileNames'])
+		...mapGetters('backups', ['backupFileNames'])
 	},
 	methods: {
-		...mapActions(['loadBackupFileNames']),
+		...mapActions('backups', ['loadBackupFileNames']),
 		validateState(name) {
 			const {$dirty, $error} = this.$v.form[name];
 			return $dirty ? !$error : null;

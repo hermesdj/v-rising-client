@@ -44,7 +44,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(['playerByUserIndex']),
+		...mapGetters('players', ['playerByUserIndex']),
 		player() {
 			return this.playerByUserIndex(this.userIndex);
 		}

@@ -25,7 +25,7 @@ export default {
 	name: "StartServerModal",
 	components: {VModal},
 	methods: {
-		...mapActions(['startServer'])
+		...mapActions('server', ['startServer'])
 	}
 }
 </script>

@@ -11,7 +11,8 @@
 			<b-col>
 				<b-card no-body bg-variant="dark" text-variant="light" border-variant="dark" class="rounded-0">
 					<b-card-header header-bg-variant="dark">
-						{{ $t('users.admin.title', {size: currentAdminList.length}) }} <small class="text-muted">{{$tc('users.admin.size', currentAdminList.length, {size: currentAdminList.length})}}</small>
+						{{ $t('users.admin.title', {size: currentAdminList.length}) }} <small
+							class="text-muted">{{ $tc('users.admin.size', currentAdminList.length, {size: currentAdminList.length}) }}</small>
 					</b-card-header>
 					<b-list-group flush class="rounded-0">
 						<b-list-group-item
@@ -25,7 +26,8 @@
 								variant="info"
 								v-if="!currentAdminList || currentAdminList.length === 0"
 						>
-							<b-icon icon="info-circle"></b-icon> {{ $t('users.admin.empty') }}
+							<b-icon icon="info-circle"></b-icon>
+							{{ $t('users.admin.empty') }}
 						</b-list-group-item>
 					</b-list-group>
 				</b-card>
@@ -33,7 +35,8 @@
 			<b-col>
 				<b-card no-body bg-variant="dark" text-variant="light" border-variant="dark" class="rounded-0">
 					<b-card-header header-bg-variant="dark">
-						{{ $t('users.ban.title') }} <small class="text-muted">{{$tc('users.ban.size', currentAdminList.length, {size: currentBanList.length})}}</small>
+						{{ $t('users.ban.title') }} <small
+							class="text-muted">{{ $tc('users.ban.size', currentAdminList.length, {size: currentBanList.length}) }}</small>
 					</b-card-header>
 					<b-list-group flush class="rounded-0">
 						<b-list-group-item
@@ -47,7 +50,8 @@
 								variant="info"
 								v-if="!currentBanList || currentBanList.length === 0"
 						>
-							<b-icon icon="info-circle"></b-icon> {{ $t('users.ban.empty') }}
+							<b-icon icon="info-circle"></b-icon>
+							{{ $t('users.ban.empty') }}
 						</b-list-group-item>
 					</b-list-group>
 				</b-card>
@@ -62,7 +66,8 @@ import {mapGetters} from "vuex";
 export default {
 	name: "UsersSettingsCard",
 	computed: {
-		...mapGetters(['isAdmin', 'currentAdminList', 'currentBanList'])
+		...mapGetters('auth', ['isAdmin']),
+		...mapGetters('settings', ['currentAdminList', 'currentBanList'])
 	}
 }
 </script>

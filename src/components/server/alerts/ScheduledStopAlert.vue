@@ -21,8 +21,8 @@ import {mapActions, mapGetters} from "vuex";
 export default {
 	name: "ScheduledStopAlert",
 	computed: {
-		...mapGetters([
-			'isAdmin',
+		...mapGetters('auth', ['isAdmin']),
+		...mapGetters('operations', [
 			'scheduledOperation',
 			'mappedOperationValues'
 		]),
@@ -31,7 +31,7 @@ export default {
 		},
 	},
 	methods: {
-		...mapActions([
+		...mapActions('operations', [
 			'stopScheduledOperation'
 		])
 	}

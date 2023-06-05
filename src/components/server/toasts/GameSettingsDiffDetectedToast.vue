@@ -46,11 +46,9 @@ export default {
 	name: "GameSettingsDiffDetectedToast",
 	components: {ShowSettingsDiffModal},
 	computed: {
-		...mapGetters([
-			'isAdmin',
-			'scheduledOperation',
-			'gameSettingsDiff'
-		]),
+		...mapGetters('auth', ['isAdmin']),
+		...mapGetters('operations', ['scheduledOperation']),
+		...mapGetters('settings', ['gameSettingsDiff']),
 		gameSettingsDefinition() {
 			return gameSettingsDefinitions(this);
 		},

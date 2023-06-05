@@ -27,12 +27,14 @@ export const formatFieldValue = (model, fieldDefinition, value) => {
 
 export const formatField = (model, fieldDefinition) => {
     const currentValue = getCurrentValue(model, fieldDefinition);
+
     return {
         label: fieldDefinition.label,
         value: formatFieldValue(model, fieldDefinition, currentValue),
         model: fieldDefinition.model,
         currentValue,
-        isArray: Array.isArray(currentValue)
+        isNumber: (fieldDefinition.inputType && fieldDefinition.inputType === 'number') || fieldDefinition.type === 'noUiSlider',
+        isMultiple: Array.isArray(currentValue)
     };
 }
 

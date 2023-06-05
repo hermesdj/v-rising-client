@@ -42,7 +42,7 @@ export default {
 		});
 	},
 	computed: {
-		...mapGetters(['currentAdminList', 'currentBanList']),
+		...mapGetters('settings', ['currentAdminList', 'currentBanList']),
 		schema() {
 			return {
 				fields: [
@@ -67,7 +67,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(['loadUsers', 'updateUsersSettings']),
+		...mapActions('settings', ['loadUsers', 'updateUsersSettings']),
 		async onSubmit(event) {
 			event.preventDefault();
 			const {admins, banned} = this.model;

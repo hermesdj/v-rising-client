@@ -121,13 +121,14 @@ export default {
 		this.loadPlayerList().catch(err => console.error('error loading player list', err));
 	},
 	computed: {
-		...mapGetters(['players', 'connectedPlayers', 'isAdmin']),
+		...mapGetters('players', ['players', 'connectedPlayers']),
+		...mapGetters('auth', ['isAdmin']),
 		displayedPlayers() {
 			return sortBy(this.players.filter(player => !this.showConnected || player.isConnected), 'characterName');
 		}
 	},
 	methods: {
-		...mapActions([
+		...mapActions('players', [
 			'loadPlayerList',
 			'updatePlayer'
 		]),

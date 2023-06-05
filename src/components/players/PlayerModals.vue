@@ -18,7 +18,7 @@ export default {
 	name: "PlayerModals",
 	components: {PlayerInfoModal},
 	computed: {
-		...mapGetters(['players'])
+		...mapGetters('players', ['players'])
 	}
 }
 </script>

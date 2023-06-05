@@ -1,18 +1,51 @@
 <template>
 	<b-form @submit="onSubmit">
-		<b-tabs pills vertical card v-model="currentTab">
-			<b-tab v-for="(tab, index) in tabs" :key="index" :title="tab.title">
+		<AutoTabSettingsFields
+				:current-tab-id="currentTabId"
+				:current-sub-tab-id="currentSubTabId"
+				:tabs="tabs"
+				namespace="hostSettings"
+				route-name="editServerHostSettings"
+		>
+			<template #tabFields="{fields}">
 				<vue-form-generator
-						:schema="{fields: tab.fields}"
+						v-if="fields && fields.length > 0"
+						:schema="{fields}"
 						:model="model"
 						:options="formOptions"
 				>
 
 				</vue-form-generator>
-			</b-tab>
-		</b-tabs>
+			</template>
+			<template #subTabFields="{fields}">
+				<vue-form-generator
+						v-if="fields && fields.length > 0"
+						:schema="{fields}"
+						:model="model"
+						:options="formOptions"
+				>
+
+				</vue-form-generator>
+			</template>
+			<template #subGroup="{subGroup}">
+				<vue-form-generator
+						v-if="subGroup && subGroup.subGroups && subGroup.subGroups.length > 0"
+						:schema="{groups: subGroup.subGroups}"
+						:model="model"
+						:options="formOptions"
+				>
+
+				</vue-form-generator>
+			</template>
+		</AutoTabSettingsFields>
 		<b-card-footer class="text-right">
-			<b-button type="submit" variant="primary">{{$t('app.btn.submit')}}</b-button>
+			<b-button
+					type="submit"
+					class="text-white"
+					variant="primary"
+			>
+				{{ $t('app.btn.submit') }}
+			</b-button>
 		</b-card-footer>
 	</b-form>
 </template>
@@ -20,12 +53,16 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import {cloneDeep} from "lodash";
-import {routerTabMixin} from "@/components/server/forms/router-tab-mixin";
 import {hostSettingsDefinitions} from "@/settings/hostSettingsDefinitions";
+import AutoTabSettingsFields from "@/components/settings/AutoTabSettingsFields.vue";
 
 export default {
 	name: "ServerHostSettingsForm",
-	mixins: [routerTabMixin],
+	components: {AutoTabSettingsFields},
+	props: {
+		currentTabId: Number,
+		currentSubTabId: Number,
+	},
 	data() {
 		return {
 			model: {},
@@ -40,8 +77,8 @@ export default {
 		this.loadServerSettings().then(() => this.model = cloneDeep(this.hostSettings));
 	},
 	computed: {
-		...mapGetters(['hostSettings']),
-		hostSettingsDefinition(){
+		...mapGetters('settings', ['hostSettings']),
+		hostSettingsDefinition() {
 			return hostSettingsDefinitions(this);
 		},
 		schema() {
@@ -65,7 +102,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(['loadServerSettings', 'updateHostSettings']),
+		...mapActions('settings', ['loadServerSettings', 'updateHostSettings']),
 		async onSubmit(event) {
 			event.preventDefault()
 			await this.updateHostSettings(this.model);

@@ -2,16 +2,16 @@
 	<b-container>
 		<b-card no-body bg-variant="dark" header-border-variant="dark" text-variant="white">
 			<b-row no-gutters>
-				<b-col cols="shrink">
+				<b-col cols="shrink" class="nav-border-right">
 					<b-card-header header-border-variant="dark" header-tag="nav">
 						<b-nav pills vertical card-header>
-							<b-nav-item to="/settings/host" exact-path exact-active-class="active">
+							<b-nav-item :to="{name: 'showHostSettings', params: {currentTab: 0, currentSubTab: 0}}" exact-path exact-active-class="active">
 								{{ $t('hostSettings.title') }}
 							</b-nav-item>
-							<b-nav-item to="/settings/game" exact-path exact-active-class="active">
+							<b-nav-item :to="{name: 'showGameSettings', params: {currentTab: 0, currentSubTab: 0}}" exact-path exact-active-class="active">
 								{{ $t('gameSettings.title') }}
 							</b-nav-item>
-							<b-nav-item v-if="isAdmin" to="/settings/users" exact-path exact-active-class="active">
+							<b-nav-item v-if="isAdmin" :to="{name: 'showUsersSettings', params: {currentTab: 0, currentSubTab: 0}}" exact-path exact-active-class="active">
 								{{ $t('users.title') }}
 							</b-nav-item>
 						</b-nav>
@@ -34,10 +34,10 @@ export default {
 		this.loadServerSettings().catch(err => console.error('Failed to load server settings', err));
 	},
 	computed: {
-		...mapGetters(['isAdmin'])
+		...mapGetters('auth', ['isAdmin']),
 	},
 	methods: {
-		...mapActions(['loadServerSettings'])
+		...mapActions('settings', ['loadServerSettings'])
 	}
 }
 </script>

@@ -7,7 +7,7 @@
 		<RestartServerModal/>
 		<ScheduleRestoreServerModal/>
 		<DownloadBackupModal/>
-		<SendAnnounceModal />
+		<SendAnnounceModal/>
 
 		<!-- Alerts -->
 		<ScheduledRestartAlert/>
@@ -89,16 +89,18 @@ export default {
 		this.loadUsers();
 	},
 	computed: {
-		...mapGetters([
-			'isAdmin',
+		...mapGetters('auth', ['isAdmin']),
+		...mapGetters('operations', [
 			'scheduledOperation',
 			'operationError',
+		]),
+		...mapGetters('settings', [
 			'hostSettingsDiff',
 			'gameSettingsDiff',
 			'adminListDiff',
 			'banListDiff'
 		]),
-		hostSettingsDefinition(){
+		hostSettingsDefinition() {
 			return hostSettingsDefinitions(this);
 		},
 		mappedValues() {
@@ -112,8 +114,10 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions([
-			'stopScheduledOperation',
+		...mapActions('operations', [
+			'stopScheduledOperation'
+		]),
+		...mapActions('settings', [
 			'loadServerSettings',
 			'loadUsers'
 		])

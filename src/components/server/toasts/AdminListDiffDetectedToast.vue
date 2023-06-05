@@ -42,11 +42,9 @@ export default {
 	name: "AdminListDiffDetectedToast",
 	components: {ShowSettingsDiffModal},
 	computed: {
-		...mapGetters([
-			'isAdmin',
-			'scheduledOperation',
-			'adminListDiff'
-		]),
+		...mapGetters('auth', ['isAdmin']),
+		...mapGetters('operations', ['scheduledOperation']),
+		...mapGetters('settings', ['adminListDiff'])
 	}
 }
 </script>

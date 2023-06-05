@@ -2,7 +2,7 @@
 	<b-container>
 		<b-card no-body bg-variant="dark" text-variant="white">
 			<b-card-header>
-				<b-button variant="outlined-dark">
+				<b-button variant="link">
 					<b-icon variant="light" icon="arrow-left" @click="$router.back()"></b-icon>
 				</b-button>
 				{{ $t(title) }}

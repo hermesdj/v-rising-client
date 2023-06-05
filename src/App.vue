@@ -32,10 +32,10 @@ export default {
 		})
 	},
 	computed: {
-		...mapGetters(['serverInfo'])
+		...mapGetters('server', ['serverInfo'])
 	},
 	methods: {
-		...mapActions(['whoami'])
+		...mapActions('auth', ['whoami'])
 	}
 }
 </script>

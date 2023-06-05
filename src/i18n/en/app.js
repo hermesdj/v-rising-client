@@ -35,9 +35,12 @@ export default {
         signOut: 'Sign Out'
     },
     menu: {
-        home: 'Server State',
-        logs: 'Server Logs',
-        settings: 'Server Settings'
+        home: 'Overview',
+        logs: 'Logs',
+        settings: 'Settings',
+        backups: 'Backups',
+        mods: 'Mods',
+        players: 'Players'
     },
     logs: {
         apiLogs: 'API Logs',

@@ -16,7 +16,7 @@ import {mapGetters} from "vuex";
 export default {
 	name: "OperationErrorAlert",
 	computed: {
-		...mapGetters([
+		...mapGetters('operations', [
 			'operationError'
 		]),
 		showOperationError() {

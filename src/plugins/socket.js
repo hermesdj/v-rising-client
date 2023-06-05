@@ -11,11 +11,11 @@ export const socket = io(constants.host, {
 
 socket.on('connect', () => {
     console.log('socket is connected !');
-    socket.emit('whoami', (user) => store.commit('saveUser', user));
+    socket.emit('whoami', (user) => store.commit('auth/saveUser', user));
 });
 socket.on('disconnect', () => {
     console.log('socket is disconnected !');
-    store.commit('saveUser', {username: null});
+    store.commit('auth/saveUser', {username: null});
 });
 
 Vue.use(VueSocketIOExt, socket, {store});
