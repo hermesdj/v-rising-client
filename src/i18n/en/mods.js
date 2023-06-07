@@ -1,5 +1,9 @@
 export default {
+    empty: 'No mods to display',
     available: {
-        title: 'Mods Available'
+        title: 'Available'
+    },
+    installed: {
+        title: 'Installed'
     }
 }

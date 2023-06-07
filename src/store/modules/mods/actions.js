@@ -8,5 +8,10 @@ export default {
     async loadInstalledMods({commit}) {
         const {data} = await http.get('/mods/installed', {withCredentials: true});
         commit('saveInstalledModList', data);
+    },
+    async loadAll({commit}){
+        const {data} = await http.get('/mods', {withCredentials: true});
+        commit('saveAvailableModList', data.available);
+        commit('saveInstalledModList', data.installed);
     }
 }

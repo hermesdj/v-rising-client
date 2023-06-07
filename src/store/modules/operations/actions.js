@@ -3,23 +3,39 @@ import {http} from "@/plugins/http";
 // TODO REFAIRE
 export default {
     // HTTP
-    async scheduleServerStop({commit}, delay) {
-        if (delay === null || delay === 0) {
-            return;
-        }
-        const {data} = await http.post('/server/scheduled-stop', {delay}, {withCredentials: true});
-        commit('saveServerInfo', data);
+    async getCurrentOperationState({commit}) {
+        const {data} = await http.get('/operations/current/status', {
+            withCredentials: true
+        });
+        commit('saveOperationInfo', data);
     },
-    async scheduleServerRestart({commit}, delay) {
+    async getOperationState({commit}, name) {
+        const {data} = await http.get(`/operations/status/${name}`, {
+            withCredentials: true
+        });
+        commit("saveOperationInfo", data);
+    },
+    async startOperation({commit}, {name, body}) {
+        const {data} = await http.post('/operations/start/' + name, body, {
+            withCredentials: true
+        });
+        commit('saveOperationInfo', data);
+    },
+    async scheduleServerStop({dispatch}, delay) {
         if (delay === null || delay === 0) {
             return;
         }
-        const {data} = await http.post('/server/scheduled-restart', {delay}, {withCredentials: true});
-        commit('saveServerInfo', data);
+        return dispatch('startOperation', {name: 'scheduled-stop', body: {delay}});
+    },
+    async scheduleServerRestart({dispatch}, delay) {
+        if (delay === null || delay === 0) {
+            return;
+        }
+        return dispatch('startOperation', {name: 'scheduled-restart', body: {delay}});
     },
     async stopScheduledOperation({commit}) {
         try {
-            const {data} = await http.post('/server/stop-current-operation', {}, {withCredentials: true});
+            const {data} = await http.post('/operations/current/stop', {}, {withCredentials: true});
             commit('saveServerInfo', data);
             await this._vm.$bvToast.toast(this._vm.$t('server.operations.stopOperation.success'), {
                 title: this._vm.$t('server.operations.stopOperation.success'),
@@ -36,28 +52,28 @@ export default {
             });
         }
     },
-    async scheduleRestoreBackup({commit}, {delay, backupFileName}) {
-        const {data} = await http.post('/autosave/schedule-restore-backup', {
-            delay,
-            backupFileName
-        }, {withCredentials: true});
-        commit('saveServerInfo', data);
+    async scheduleRestoreBackup({dispatch}, {delay, backupFileName}) {
+        return dispatch('startOperation', {name: 'restore-backup', body: {delay, backupFileName}});
     },
 
     // SOCKET
-    socket_operationStart({commit}, serverInfo) {
-        commit('saveServerInfo', serverInfo);
+    socket_operationInfoUpdated({commit}, operationInfo) {
+        commit('saveOperationInfo', operationInfo);
     },
-    socket_operationExecute({commit}, serverInfo) {
-        commit('saveServerInfo', serverInfo);
+    socket_operationScheduled({commit}, operationInfo) {
+        commit('saveOperationInfo', operationInfo);
     },
-    socket_operationDone({commit}, serverInfo) {
-        commit('saveServerInfo', serverInfo);
+    socket_operationSuccess({commit}, operationInfo) {
+        commit('saveOperationInfo', operationInfo);
     },
-    socket_operationProgress({commit}, serverInfo) {
-        commit('saveServerInfo', serverInfo);
-    },
-    socket_operationError({commit}, error) {
+    socket_operationError({commit}, {error, operationInfo}) {
+        commit('saveOperationInfo', operationInfo);
         commit('saveOperationError', error);
+    },
+    socket_operationFinished({commit}, operationInfo) {
+        commit('saveOperationInfo', operationInfo);
+    },
+    socket_operationProgress({commit}, operationInfo) {
+        commit('saveOperationInfo', operationInfo);
     },
 }

@@ -2,6 +2,9 @@ export default {
     scheduledOperation(state) {
         return state.currentOperation;
     },
+    currentOperation(state) {
+        return state.currentOperation;
+    },
     mappedOperationValues(state, getters) {
         const {currentOperation} = getters;
         const options = currentOperation && currentOperation.options ? currentOperation.options : {};

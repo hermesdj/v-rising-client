@@ -18,24 +18,13 @@
 
 <script>
 
-import {mapActions, mapGetters} from "vuex";
 import ConnectedPlayersCard from "@/components/players/ConnectedPlayersCard.vue";
 import ServerInfoCard from "@/components/server/ServerInfoCard.vue";
 import ServerToolbar from "@/components/server/ServerToolbar.vue";
 
 export default {
 	name: "HomePage",
-	components: {ServerToolbar, ServerInfoCard, ConnectedPlayersCard},
-	data() {
-		return {}
-	},
-	computed: {
-		...mapGetters('players', ['players', 'serverInfo']),
-		...mapGetters('server', ['serverInfo'])
-	},
-	methods: {
-		...mapActions('players', ['loadPlayerList'])
-	}
+	components: {ServerToolbar, ServerInfoCard, ConnectedPlayersCard}
 }
 
 </script>

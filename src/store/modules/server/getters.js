@@ -4,14 +4,17 @@ export default {
     serverInfo(state) {
         return state.info;
     },
+    serverState(state){
+        return state.info.state;
+    },
     isOnline(state) {
-        return state.info.isSaveLoaded;
+        return state.info.state === 'online';
     },
     isLoading(state) {
         return state.info.serverSetupComplete && !state.info.isSaveLoaded;
     },
     isOffline(state) {
-        return state.info.pid === null;
+        return state.info.state === 'offline';
     },
     isReady(state, getters) {
         return getters.isOnline && state.info.publicIp && state.info.queryPort

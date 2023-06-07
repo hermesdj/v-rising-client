@@ -127,9 +127,36 @@ const routes = [
             },
             {
                 path: 'mods',
-                name: 'mods',
                 component: () => import('@/views/ModsPage.vue'),
-                meta: {admin: true}
+                meta: {admin: true},
+                children: [
+                    {
+                        path: 'installed/:page',
+                        name: 'installedModList',
+                        component: () => import('@/components/mods/InstalledModList.vue'),
+                        meta: {admin: true},
+                        props: route => ({page: parseInt(route.params.page)})
+                    },
+                    {
+                        path: 'available/:page',
+                        name: 'availableModList',
+                        component: () => import('@/components/mods/AvailableModList.vue'),
+                        meta: {admin: true},
+                        props: route => ({page: parseInt(route.params.page)})
+                    }
+                ]
+            },
+            {
+                path: 'mod',
+                component: () => import('@/views/ModPage.vue'),
+                children: [
+                    {
+                        path: ':uuid',
+                        name: 'modPage',
+                        component: () => import('@/components/mods/ModCard.vue'),
+                        props: true
+                    }
+                ]
             }
         ]
     }

@@ -16,7 +16,8 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(VueRouter);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = process.env.NODE_ENV === 'production';
+Vue.config.devtools = process.env.NODE_ENV === 'development';
 
 new Vue({
     render: h => h(App),

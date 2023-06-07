@@ -5,7 +5,15 @@ export default {
     connect: 'Connect',
     state: {
         offline: 'Offline',
-        configReady: 'Loaded Configuration',
+        process_started: 'Process Started',
+        updating: 'Updating Steam...',
+        updated: 'Updated Steam',
+        checking_mods: 'Checking Mods...',
+        error: 'Server Error',
+        exiting: 'Exiting',
+        starting: 'Starting...',
+        stopping: 'Stopping...',
+        setup_complete: 'Loaded Configuration',
         online: 'Online'
     },
     tabs: {
@@ -55,7 +63,7 @@ export default {
             text: 'This action will immediately kill the server without warning the players if any are connected !'
         },
         start: {
-            btn: 'Start',
+            btn: 'Start Server',
             title: 'Start VRising Server',
             text: 'This action will begin the startup process of the VRising server.'
         },

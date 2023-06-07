@@ -88,7 +88,7 @@ export default {
 					displayed: () => this.isAdmin
 				},
 				{
-					to: {name: 'mods'},
+					to: {name: 'installedModList', params: {page: 1}},
 					text: this.$t('app.menu.mods'),
 					displayed: () => this.isAdmin
 				},

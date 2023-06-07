@@ -1,7 +1,7 @@
 <template>
 	<ModListPaginator
 			:page="page"
-			:mods="availableMods"
+			:mods="installedMods"
 	>
 		<template #default="{mod}">
 			<DisplayModRowItem :mod="mod"/>
@@ -13,9 +13,10 @@
 import {mapActions, mapGetters} from "vuex";
 import ModListPaginator from "@/components/mods/ModListPaginator.vue";
 import DisplayModRowItem from "@/components/mods/DisplayModRowItem.vue";
+import dayjs from "dayjs";
 
 export default {
-	name: "AvailableModList",
+	name: "InstalledModList",
 	components: {DisplayModRowItem, ModListPaginator},
 	props: {
 		page: {
@@ -24,15 +25,20 @@ export default {
 		}
 	},
 	mounted() {
-		if (this.availableMods.length === 0) {
-			this.loadAvailableMods();
+		if (this.installedMods.length === 0) {
+			this.loadInstalledMods();
+		}
+	},
+	filters: {
+		fromNow(value) {
+			return dayjs(value).fromNow();
 		}
 	},
 	computed: {
-		...mapGetters('mods', ['availableMods'])
+		...mapGetters('mods', ['installedMods'])
 	},
 	methods: {
-		...mapActions('mods', ['loadAvailableMods'])
+		...mapActions('mods', ['loadInstalledMods'])
 	}
 }
 </script>

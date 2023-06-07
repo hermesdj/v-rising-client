@@ -1,6 +1,6 @@
 <template>
 	<b-button
-			v-show="serverInfo.pid === null"
+			v-show="isOffline"
 			variant="success"
 			@click="() => $bvModal.show('start-server-modal')"
 	>
@@ -14,7 +14,7 @@ import {mapGetters} from "vuex";
 export default {
 	name: "StartServerBtn",
 	computed: {
-		...mapGetters('server', ['serverInfo'])
+		...mapGetters('server', ['isOffline'])
 	}
 }
 </script>

@@ -32,10 +32,10 @@ import ScheduleStopServerModal from "@/components/server/modal/ScheduleStopServe
 import ScheduleRestoreServerModal from "@/components/server/modal/ScheduleRestoreServerModal.vue";
 import StartServerModal from "@/components/server/modal/StartServerModal.vue";
 import ForceStopServerModal from "@/components/server/modal/ForceStopServerModal.vue";
-import ScheduledRestartAlert from "@/components/server/alerts/ScheduledRestartAlert.vue";
-import ScheduledRestoreAlert from "@/components/server/alerts/ScheduledRestoreAlert.vue";
-import ScheduledStopAlert from "@/components/server/alerts/ScheduledStopAlert.vue";
-import OperationErrorAlert from "@/components/server/alerts/OperationErrorAlert.vue";
+import ScheduledRestartAlert from "@/components/operations/alerts/ScheduledRestartAlert.vue";
+import ScheduledRestoreAlert from "@/components/operations/alerts/ScheduledRestoreAlert.vue";
+import ScheduledStopAlert from "@/components/operations/alerts/ScheduledStopAlert.vue";
+import OperationErrorAlert from "@/components/operations/alerts/OperationErrorAlert.vue";
 import HostSettingsDiffDetectedToast from "@/components/server/toasts/HostSettingsDiffDetectedToast.vue";
 import GameSettingsDiffDetectedToast from "@/components/server/toasts/GameSettingsDiffDetectedToast.vue";
 import AdminListDiffDetectedToast from "@/components/server/toasts/AdminListDiffDetectedToast.vue";

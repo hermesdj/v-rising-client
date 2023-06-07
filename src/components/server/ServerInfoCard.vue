@@ -76,18 +76,18 @@ export default {
 		this.loadServerInfo().catch(err => console.error('Failed to load server info', err));
 	},
 	computed: {
-		...mapGetters('server', ['serverInfo', 'isOnline', 'isOffline', 'isLoading', 'serverName']),
+		...mapGetters('server', ['serverState', 'serverInfo', 'isOnline', 'isOffline', 'isLoading', 'serverName']),
 		...mapGetters('auth', ['isAdmin']),
 		status() {
 			let color = 'danger';
-			let status = this.$t('server.state.offline');
+			let status = this.$t('server.state.' + this.serverState);
 
-			if (this.isOnline) {
+			if (this.serverState === 'online') {
 				color = 'success';
-				status = this.$t('server.state.online');
-			} else if (this.isLoading) {
+			} else if (this.serverState === 'offline' || this.serverState === 'error') {
+				color = 'danger';
+			} else {
 				color = 'warning';
-				status = this.$t('server.state.configReady');
 			}
 
 			return {color, status};

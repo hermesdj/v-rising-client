@@ -1,5 +1,6 @@
 export default {
     info: {
+        state: 'offline',
         serverName: null,
         saveName: null,
         time: null,
