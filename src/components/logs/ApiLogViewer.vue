@@ -30,6 +30,15 @@ export default {
 	props: {
 		logName: String
 	},
+	sockets: {
+		'server stopped'() {
+			this.logCache.delete('v-server-logs');
+			this.logCache.delete('process-logs');
+			if (this.logName !== 'api-logs') {
+				this.log = '';
+			}
+		}
+	},
 	data() {
 		return {
 			log: '',

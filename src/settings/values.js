@@ -202,6 +202,12 @@ export const vBloodUnits = (app) => [
         defaultUnlocked: false
     },
     {
+        id: -1365931036,
+        label: app.$t('gameSettings.values.VBloodUnits.KriigTheUndeadGeneral'),
+        level: 46,
+        defaultUnlocked: false
+    },
+    {
         id: -1065970933,
         label: app.$t('gameSettings.values.VBloodUnits.TerahTheGeomancer'),
         level: 48,

@@ -2,7 +2,9 @@
 	<div>
 		<div class="d-flex w-100 justify-content-between">
 			<h6 class="mb-1">
-				{{ mod.name.replace(/_/g, ' ') }}
+				<router-link :to="{name: 'modPage', params: {uuid: mod.uuid4}}">
+					{{ mod.name.replace(/_/g, ' ') }}
+				</router-link>
 				<b-badge
 						v-for="(category, index) in mod.categories"
 						:key="index"

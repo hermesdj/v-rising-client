@@ -367,6 +367,7 @@ export default {
             ChristinaTheSunPriestess: 'Christina The Sun Priestess',
             LeandraTheShadowPriestess: 'Leandra The Shadow Prietess',
             TristanTheVampireHunter: 'Tristan The Vampire Hunter',
+            KriigTheUndeadGeneral: 'Kriig The Undead General',
             TerahTheGeomancer: 'Terah The Geomancer',
             MeredithTheBrightArcher: 'Meredith The Bright Archer',
             FrostmawTheMountainTerror: 'Frostmaw The Mountain Terror',

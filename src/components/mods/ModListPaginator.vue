@@ -8,7 +8,6 @@
 					v-for="(mod, index) in pageItems"
 					variant="dark"
 					:key="index"
-					:to="{name: 'modPage', params: {uuid: mod.uuid4}}"
 			>
 				<slot :mod="mod" :index="index"></slot>
 			</b-list-group-item>
