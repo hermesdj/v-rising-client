@@ -14,6 +14,7 @@ export default {
         starting: 'Starting...',
         stopping: 'Stopping...',
         setup_complete: 'Loaded Configuration',
+        finishing_loading: 'Loading Save...',
         online: 'Online'
     },
     tabs: {
